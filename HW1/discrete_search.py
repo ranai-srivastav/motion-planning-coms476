@@ -31,6 +31,17 @@ class StateTransition:
         raise NotImplementedError
 
 
+def path_gen(goal_state, parents):
+    path = []
+    state = goal_state
+
+    while state is not None:
+        path.append(state)
+        state = parents[state]
+
+    return path
+
+
 def fsearch(X, U, f, xI, XG, alg):
     """Return the list of visited nodes and a path from xI to XG based on the given algorithm
 
@@ -48,5 +59,32 @@ def fsearch(X, U, f, xI, XG, alg):
     @return:   a dictionary {"visited": visited_states, "path": path} where visited_states is the list of
                states visited during the search and path is a path from xI to a state in XG
     """
-    # TODO: Implement this function
-    raise NotImplementedError
+    from DataStructs import QueueBFS, QueueDFS, QueueAStar
+
+    visited = set()
+    parents = {xI: None}
+
+    if alg == "bfs":
+        data_structure = QueueBFS()
+    elif alg == "dfs":
+        data_structure = QueueDFS()
+    else:
+        data_structure = QueueAStar()
+
+    data_structure.insert(xI)
+
+    while not data_structure.is_empty():
+        curr = data_structure.pop()
+        visited.add(curr)
+
+        if curr in XG:
+            visited.add(curr)
+            return {"visited": list(visited), "path": path_gen(curr, parents)}
+
+        for neighbor in U(curr):
+            if neighbor not in visited:
+                visited.add(neighbor)
+                data_structure.insert(neighbor)
+                parents[neighbor] = curr
+
+    return list(), list()

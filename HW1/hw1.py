@@ -29,12 +29,17 @@ class Grid2DStates(StateSpace):
         self.O = O
 
     def __contains__(self, x):
-        # TODO: Implement this function
-        raise NotImplementedError
+        if x[0] < self.Xmin or x[0] > self.Xmax or x[1] < self.Ymin or x[1] > self.Ymax:
+            return False
+
+        for obs in self.O:
+            if x[0] == obs[0] and x[1] == obs[1]:
+                return False
+
+        return True
 
     def get_distance_lower_bound(self, x1, x2):
-        # TODO: Implement this function
-        raise NotImplementedError
+        return abs(x1[0] - x2[0]) + abs(x1[0] - x2[0])
 
     def draw(self, ax, grid_on=True, tick_step=[1, 1]):
         G = np.zeros((self.Ymax - self.Ymin + 1, self.Xmax - self.Xmin + 1))
@@ -78,12 +83,19 @@ class Grid2DStates(StateSpace):
 
 
 class GridStateTransition(StateTransition):
+    """
+    Returns a new state obtained by applying action u at state x
+    """
+
     def __call__(self, x, u):
-        # TODO: Implement this function
-        raise NotImplementedError
+        return tuple([x[0] + u[0], x[1] + u[1]])
 
 
 class Grid2DActions(ActionSpace):
+    """
+    A list of 4 things, each a move in the 4 cardinal directions.
+    """
+
     all_actions = [(0, 1), (0, -1), (-1, 0), (1, 0)]
 
     def __init__(self, X, f):
@@ -91,8 +103,12 @@ class Grid2DActions(ActionSpace):
         self.f = f
 
     def __call__(self, x):
-        # TODO: Implement this function
-        raise NotImplementedError
+        all_moves = []
+        for action in Grid2DActions.all_actions:
+            x_ = self.f(x, action)
+            if x_ in self.X:
+                all_moves.append(x_)
+        return all_moves
 
 
 def parse_args():
@@ -125,7 +141,7 @@ def parse_args():
     args = parser.parse_args(sys.argv[1:])
     if not args.out:
         args.out = (
-            os.path.splitext(os.path.basename(args.desc))[0] + "_" + args.alg + ".json"
+                os.path.splitext(os.path.basename(args.desc))[0] + "_" + args.alg + ".json"
         )
 
     print("Problem description: ", args.desc)
