@@ -61,7 +61,7 @@ def fsearch(X, U, f, xI, XG, alg):
     """
     from DataStructs import QueueBFS, QueueDFS, QueueAStar
 
-    visited = set()
+    visited = list()
     parents = {xI: None}
 
     if alg == "bfs":
@@ -75,15 +75,15 @@ def fsearch(X, U, f, xI, XG, alg):
 
     while not data_structure.is_empty():
         curr = data_structure.pop()
-        visited.add(curr)
+        visited.append(curr)
 
         if curr in XG:
-            visited.add(curr)
+            visited.append(curr)
             return {"visited": list(visited), "path": path_gen(curr, parents)}
 
         for neighbor in U(curr):
             if neighbor not in visited:
-                visited.add(neighbor)
+                visited.append(neighbor)
                 data_structure.insert(neighbor)
                 parents[neighbor] = curr
 
