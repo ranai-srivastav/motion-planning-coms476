@@ -37,8 +37,9 @@ def path_gen(goal_state, parents):
 
     while state is not None:
         path.append(state)
-        state = parents[state]
+        state = parents[state][0]
 
+    path.reverse()
     return path
 
 
@@ -62,29 +63,36 @@ def fsearch(X, U, f, xI, XG, alg):
     from DataStructs import QueueBFS, QueueDFS, QueueAStar
 
     visited = list()
-    parents = {xI: None}
+    parents = {xI: (None, 0)}
 
     if alg == "bfs":
         data_structure = QueueBFS()
     elif alg == "dfs":
         data_structure = QueueDFS()
     else:
-        data_structure = QueueAStar()
+        data_structure = QueueAStar(X, XG, xI, parents)
 
+    # inserts it into the appropriate data structure based on the dynamic type
     data_structure.insert(xI)
+    visited.append(xI)
 
+    # do only while there are no other nodes to process
     while not data_structure.is_empty():
         curr = data_structure.pop()
-        visited.append(curr)
 
         if curr in XG:
-            visited.append(curr)
             return {"visited": list(visited), "path": path_gen(curr, parents)}
 
         for neighbor in U(curr):
             if neighbor not in visited:
                 visited.append(neighbor)
+                parents[neighbor] = (curr, parents[curr][1] + 1)
                 data_structure.insert(neighbor)
-                parents[neighbor] = curr
+            else:
+                if (neighbor[0] != xI[0] and neighbor[1] != xI[1]) or neighbor != xI:
+                    if parents[curr][1] + 1 < parents[neighbor][1]:
+                        parents[neighbor] = (curr, parents[neighbor][1] + 1)
+                        
+
 
     return list(), list()

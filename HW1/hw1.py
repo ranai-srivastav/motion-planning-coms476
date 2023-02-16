@@ -29,6 +29,7 @@ class Grid2DStates(StateSpace):
         self.O = O
 
     def __contains__(self, x):
+        # Checks if an object is not in an obstacle and is in bounds
         if x[0] < self.Xmin or x[0] > self.Xmax or x[1] < self.Ymin or x[1] > self.Ymax:
             return False
 
@@ -88,7 +89,7 @@ class GridStateTransition(StateTransition):
     """
 
     def __call__(self, x, u):
-        return tuple([x[0] + u[0], x[1] + u[1]])
+        return tuple( [x[0] + u[0], x[1] + u[1]] )
 
 
 class Grid2DActions(ActionSpace):
@@ -103,6 +104,7 @@ class Grid2DActions(ActionSpace):
         self.f = f
 
     def __call__(self, x):
+        # creates a list and returns the possible moves that can be taken
         all_moves = []
         for action in Grid2DActions.all_actions:
             x_ = self.f(x, action)
