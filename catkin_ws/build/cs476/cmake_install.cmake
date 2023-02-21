@@ -88,3 +88,11 @@ if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cs476" TYPE FILE FILES "/root/motion-planning-coms476/catkin_ws/src/cs476/package.xml")
 endif()
 
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cs476" TYPE PROGRAM FILES "/root/motion-planning-coms476/catkin_ws/build/cs476/catkin_generated/installspace/hw2_chain_configurator.py")
+endif()
+
+if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/cs476" TYPE PROGRAM FILES "/root/motion-planning-coms476/catkin_ws/build/cs476/catkin_generated/installspace/hw2_chain_plotter.py")
+endif()
+

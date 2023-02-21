@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import rospy
 import matplotlib.pyplot as plt
 from cs476.msg import Chain2D
@@ -162,6 +162,8 @@ def get_link_positions(config, W, L, D):
     joint_list = get_joints(config, D)
     
     vert_list = get_vertices(config, W, L, D)
+    
+    print(vert_list)
     
     return joint_list, vert_list
     
