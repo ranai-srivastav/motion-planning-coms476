@@ -118,12 +118,16 @@ set(CMAKE_MAKEFILE_DEPENDS
   "cs476/catkin_generated/ordered_paths.cmake"
   "cs476/catkin_generated/package.cmake"
   "cs476/cmake/cs476-genmsg.cmake"
+  "my_tf2_homework/catkin_generated/ordered_paths.cmake"
+  "my_tf2_homework/catkin_generated/package.cmake"
   "/root/motion-planning-coms476/catkin_ws/devel/share/cs476/cmake/cs476-msg-paths.cmake"
   "/root/motion-planning-coms476/catkin_ws/src/CMakeLists.txt"
   "/root/motion-planning-coms476/catkin_ws/src/cs476/CMakeLists.txt"
   "/root/motion-planning-coms476/catkin_ws/src/cs476/package.xml"
   "/root/motion-planning-coms476/catkin_ws/src/cs476/scripts/listener.py"
   "/root/motion-planning-coms476/catkin_ws/src/cs476/scripts/talker.py"
+  "/root/motion-planning-coms476/catkin_ws/src/my_tf2_homework/CMakeLists.txt"
+  "/root/motion-planning-coms476/catkin_ws/src/my_tf2_homework/package.xml"
   "/usr/share/cmake-3.16/Modules/CMakeCInformation.cmake"
   "/usr/share/cmake-3.16/Modules/CMakeCXXInformation.cmake"
   "/usr/share/cmake-3.16/Modules/CMakeCheckCompilerFlagCommonPatterns.cmake"
@@ -201,6 +205,7 @@ set(CMAKE_MAKEFILE_PRODUCTS
   "gtest/googlemock/CMakeFiles/CMakeDirectoryInformation.cmake"
   "gtest/googletest/CMakeFiles/CMakeDirectoryInformation.cmake"
   "cs476/CMakeFiles/CMakeDirectoryInformation.cmake"
+  "my_tf2_homework/CMakeFiles/CMakeDirectoryInformation.cmake"
   )
 
 # Dependency information for all targets:

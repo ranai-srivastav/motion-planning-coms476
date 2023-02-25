@@ -8,4 +8,3 @@
 
 # modified environment variables
 export PWD='/root/motion-planning-coms476/catkin_ws/build'
-export PYTHONPATH="/root/motion-planning-coms476/catkin_ws/devel/lib/python3/dist-packages:$PYTHONPATH"

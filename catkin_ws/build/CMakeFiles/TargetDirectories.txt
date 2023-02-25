@@ -59,3 +59,10 @@
 /root/motion-planning-coms476/catkin_ws/build/cs476/CMakeFiles/_cs476_generate_messages_check_deps_FloatArray.dir
 /root/motion-planning-coms476/catkin_ws/build/cs476/CMakeFiles/cs476_generate_messages_eus.dir
 /root/motion-planning-coms476/catkin_ws/build/cs476/CMakeFiles/cs476_geneus.dir
+/root/motion-planning-coms476/catkin_ws/build/my_tf2_homework/CMakeFiles/install/strip.dir
+/root/motion-planning-coms476/catkin_ws/build/my_tf2_homework/CMakeFiles/install/local.dir
+/root/motion-planning-coms476/catkin_ws/build/my_tf2_homework/CMakeFiles/install.dir
+/root/motion-planning-coms476/catkin_ws/build/my_tf2_homework/CMakeFiles/list_install_components.dir
+/root/motion-planning-coms476/catkin_ws/build/my_tf2_homework/CMakeFiles/rebuild_cache.dir
+/root/motion-planning-coms476/catkin_ws/build/my_tf2_homework/CMakeFiles/edit_cache.dir
+/root/motion-planning-coms476/catkin_ws/build/my_tf2_homework/CMakeFiles/test.dir

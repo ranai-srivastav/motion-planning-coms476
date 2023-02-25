@@ -1,0 +1,8 @@
+prefix=/root/motion-planning-coms476/catkin_ws/devel
+
+Name: my_tf2_homework
+Description: Description of my_tf2_homework
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
