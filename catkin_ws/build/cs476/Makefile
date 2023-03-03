@@ -56,18 +56,6 @@ CMAKE_BINARY_DIR = /root/motion-planning-coms476/catkin_ws/build
 #=============================================================================
 # Targets provided globally by CMake.
 
-# Special rule for the target install/local
-install/local: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local
-
-# Special rule for the target install/local
-install/local/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
-	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
-.PHONY : install/local/fast
-
 # Special rule for the target install/strip
 install/strip: preinstall
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing the project stripped..."
@@ -80,17 +68,17 @@ install/strip/fast: preinstall/fast
 	/usr/bin/cmake -DCMAKE_INSTALL_DO_STRIP=1 -P cmake_install.cmake
 .PHONY : install/strip/fast
 
-# Special rule for the target install
-install: preinstall
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install
+# Special rule for the target install/local
+install/local: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local
 
-# Special rule for the target install
-install/fast: preinstall/fast
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
-	/usr/bin/cmake -P cmake_install.cmake
-.PHONY : install/fast
+# Special rule for the target install/local
+install/local/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
+	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
+.PHONY : install/local/fast
 
 # Special rule for the target list_install_components
 list_install_components:
@@ -135,6 +123,18 @@ test/fast: test
 
 .PHONY : test/fast
 
+# Special rule for the target install
+install: preinstall
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install
+
+# Special rule for the target install
+install/fast: preinstall/fast
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Install the project..."
+	/usr/bin/cmake -P cmake_install.cmake
+.PHONY : install/fast
+
 # The main all target
 all: cmake_check_build_system
 	cd /root/motion-planning-coms476/catkin_ws/build && $(CMAKE_COMMAND) -E cmake_progress_start /root/motion-planning-coms476/catkin_ws/build/CMakeFiles /root/motion-planning-coms476/catkin_ws/build/cs476/CMakeFiles/progress.marks
@@ -168,34 +168,19 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-cs476/CMakeFiles/cs476_generate_messages_py.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_generate_messages_py.dir/rule
-.PHONY : cs476/CMakeFiles/cs476_generate_messages_py.dir/rule
+cs476/CMakeFiles/cs476_generate_messages.dir/rule:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_generate_messages.dir/rule
+.PHONY : cs476/CMakeFiles/cs476_generate_messages.dir/rule
 
 # Convenience name for target.
-cs476_generate_messages_py: cs476/CMakeFiles/cs476_generate_messages_py.dir/rule
+cs476_generate_messages: cs476/CMakeFiles/cs476_generate_messages.dir/rule
 
-.PHONY : cs476_generate_messages_py
+.PHONY : cs476_generate_messages
 
 # fast build rule for target.
-cs476_generate_messages_py/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_generate_messages_py.dir/build.make cs476/CMakeFiles/cs476_generate_messages_py.dir/build
-.PHONY : cs476_generate_messages_py/fast
-
-# Convenience name for target.
-cs476/CMakeFiles/cs476_gennodejs.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_gennodejs.dir/rule
-.PHONY : cs476/CMakeFiles/cs476_gennodejs.dir/rule
-
-# Convenience name for target.
-cs476_gennodejs: cs476/CMakeFiles/cs476_gennodejs.dir/rule
-
-.PHONY : cs476_gennodejs
-
-# fast build rule for target.
-cs476_gennodejs/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_gennodejs.dir/build.make cs476/CMakeFiles/cs476_gennodejs.dir/build
-.PHONY : cs476_gennodejs/fast
+cs476_generate_messages/fast:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_generate_messages.dir/build.make cs476/CMakeFiles/cs476_generate_messages.dir/build
+.PHONY : cs476_generate_messages/fast
 
 # Convenience name for target.
 cs476/CMakeFiles/cs476_generate_messages_nodejs.dir/rule:
@@ -213,141 +198,6 @@ cs476_generate_messages_nodejs/fast:
 .PHONY : cs476_generate_messages_nodejs/fast
 
 # Convenience name for target.
-cs476/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-.PHONY : cs476/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_cpp: cs476/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-
-.PHONY : std_msgs_generate_messages_cpp
-
-# fast build rule for target.
-std_msgs_generate_messages_cpp/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make cs476/CMakeFiles/std_msgs_generate_messages_cpp.dir/build
-.PHONY : std_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-cs476/CMakeFiles/std_msgs_generate_messages_eus.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
-.PHONY : cs476/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_eus: cs476/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
-
-.PHONY : std_msgs_generate_messages_eus
-
-# fast build rule for target.
-std_msgs_generate_messages_eus/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/std_msgs_generate_messages_eus.dir/build.make cs476/CMakeFiles/std_msgs_generate_messages_eus.dir/build
-.PHONY : std_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-cs476/CMakeFiles/cs476_genlisp.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_genlisp.dir/rule
-.PHONY : cs476/CMakeFiles/cs476_genlisp.dir/rule
-
-# Convenience name for target.
-cs476_genlisp: cs476/CMakeFiles/cs476_genlisp.dir/rule
-
-.PHONY : cs476_genlisp
-
-# fast build rule for target.
-cs476_genlisp/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_genlisp.dir/build.make cs476/CMakeFiles/cs476_genlisp.dir/build
-.PHONY : cs476_genlisp/fast
-
-# Convenience name for target.
-cs476/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-.PHONY : cs476/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_lisp: cs476/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-
-.PHONY : std_msgs_generate_messages_lisp
-
-# fast build rule for target.
-std_msgs_generate_messages_lisp/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/std_msgs_generate_messages_lisp.dir/build.make cs476/CMakeFiles/std_msgs_generate_messages_lisp.dir/build
-.PHONY : std_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-cs476/CMakeFiles/cs476_genpy.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_genpy.dir/rule
-.PHONY : cs476/CMakeFiles/cs476_genpy.dir/rule
-
-# Convenience name for target.
-cs476_genpy: cs476/CMakeFiles/cs476_genpy.dir/rule
-
-.PHONY : cs476_genpy
-
-# fast build rule for target.
-cs476_genpy/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_genpy.dir/build.make cs476/CMakeFiles/cs476_genpy.dir/build
-.PHONY : cs476_genpy/fast
-
-# Convenience name for target.
-cs476/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-.PHONY : cs476/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_nodejs: cs476/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-
-.PHONY : std_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-std_msgs_generate_messages_nodejs/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build.make cs476/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build
-.PHONY : std_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-cs476/CMakeFiles/cs476_generate_messages.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_generate_messages.dir/rule
-.PHONY : cs476/CMakeFiles/cs476_generate_messages.dir/rule
-
-# Convenience name for target.
-cs476_generate_messages: cs476/CMakeFiles/cs476_generate_messages.dir/rule
-
-.PHONY : cs476_generate_messages
-
-# fast build rule for target.
-cs476_generate_messages/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_generate_messages.dir/build.make cs476/CMakeFiles/cs476_generate_messages.dir/build
-.PHONY : cs476_generate_messages/fast
-
-# Convenience name for target.
-cs476/CMakeFiles/std_msgs_generate_messages_py.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-.PHONY : cs476/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_py: cs476/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-
-.PHONY : std_msgs_generate_messages_py
-
-# fast build rule for target.
-std_msgs_generate_messages_py/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/std_msgs_generate_messages_py.dir/build.make cs476/CMakeFiles/std_msgs_generate_messages_py.dir/build
-.PHONY : std_msgs_generate_messages_py/fast
-
-# Convenience name for target.
-cs476/CMakeFiles/cs476_generate_messages_lisp.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_generate_messages_lisp.dir/rule
-.PHONY : cs476/CMakeFiles/cs476_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-cs476_generate_messages_lisp: cs476/CMakeFiles/cs476_generate_messages_lisp.dir/rule
-
-.PHONY : cs476_generate_messages_lisp
-
-# fast build rule for target.
-cs476_generate_messages_lisp/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_generate_messages_lisp.dir/build.make cs476/CMakeFiles/cs476_generate_messages_lisp.dir/build
-.PHONY : cs476_generate_messages_lisp/fast
-
-# Convenience name for target.
 cs476/CMakeFiles/cs476_generate_messages_cpp.dir/rule:
 	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_generate_messages_cpp.dir/rule
 .PHONY : cs476/CMakeFiles/cs476_generate_messages_cpp.dir/rule
@@ -363,19 +213,19 @@ cs476_generate_messages_cpp/fast:
 .PHONY : cs476_generate_messages_cpp/fast
 
 # Convenience name for target.
-cs476/CMakeFiles/cs476_gencpp.dir/rule:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_gencpp.dir/rule
-.PHONY : cs476/CMakeFiles/cs476_gencpp.dir/rule
+cs476/CMakeFiles/cs476_gennodejs.dir/rule:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_gennodejs.dir/rule
+.PHONY : cs476/CMakeFiles/cs476_gennodejs.dir/rule
 
 # Convenience name for target.
-cs476_gencpp: cs476/CMakeFiles/cs476_gencpp.dir/rule
+cs476_gennodejs: cs476/CMakeFiles/cs476_gennodejs.dir/rule
 
-.PHONY : cs476_gencpp
+.PHONY : cs476_gennodejs
 
 # fast build rule for target.
-cs476_gencpp/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_gencpp.dir/build.make cs476/CMakeFiles/cs476_gencpp.dir/build
-.PHONY : cs476_gencpp/fast
+cs476_gennodejs/fast:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_gennodejs.dir/build.make cs476/CMakeFiles/cs476_gennodejs.dir/build
+.PHONY : cs476_gennodejs/fast
 
 # Convenience name for target.
 cs476/CMakeFiles/_cs476_generate_messages_check_deps_FloatArray.dir/rule:
@@ -422,36 +272,106 @@ cs476_geneus/fast:
 	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_geneus.dir/build.make cs476/CMakeFiles/cs476_geneus.dir/build
 .PHONY : cs476_geneus/fast
 
+# Convenience name for target.
+cs476/CMakeFiles/cs476_generate_messages_lisp.dir/rule:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_generate_messages_lisp.dir/rule
+.PHONY : cs476/CMakeFiles/cs476_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+cs476_generate_messages_lisp: cs476/CMakeFiles/cs476_generate_messages_lisp.dir/rule
+
+.PHONY : cs476_generate_messages_lisp
+
+# fast build rule for target.
+cs476_generate_messages_lisp/fast:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_generate_messages_lisp.dir/build.make cs476/CMakeFiles/cs476_generate_messages_lisp.dir/build
+.PHONY : cs476_generate_messages_lisp/fast
+
+# Convenience name for target.
+cs476/CMakeFiles/cs476_genpy.dir/rule:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_genpy.dir/rule
+.PHONY : cs476/CMakeFiles/cs476_genpy.dir/rule
+
+# Convenience name for target.
+cs476_genpy: cs476/CMakeFiles/cs476_genpy.dir/rule
+
+.PHONY : cs476_genpy
+
+# fast build rule for target.
+cs476_genpy/fast:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_genpy.dir/build.make cs476/CMakeFiles/cs476_genpy.dir/build
+.PHONY : cs476_genpy/fast
+
+# Convenience name for target.
+cs476/CMakeFiles/cs476_gencpp.dir/rule:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_gencpp.dir/rule
+.PHONY : cs476/CMakeFiles/cs476_gencpp.dir/rule
+
+# Convenience name for target.
+cs476_gencpp: cs476/CMakeFiles/cs476_gencpp.dir/rule
+
+.PHONY : cs476_gencpp
+
+# fast build rule for target.
+cs476_gencpp/fast:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_gencpp.dir/build.make cs476/CMakeFiles/cs476_gencpp.dir/build
+.PHONY : cs476_gencpp/fast
+
+# Convenience name for target.
+cs476/CMakeFiles/cs476_genlisp.dir/rule:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_genlisp.dir/rule
+.PHONY : cs476/CMakeFiles/cs476_genlisp.dir/rule
+
+# Convenience name for target.
+cs476_genlisp: cs476/CMakeFiles/cs476_genlisp.dir/rule
+
+.PHONY : cs476_genlisp
+
+# fast build rule for target.
+cs476_genlisp/fast:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_genlisp.dir/build.make cs476/CMakeFiles/cs476_genlisp.dir/build
+.PHONY : cs476_genlisp/fast
+
+# Convenience name for target.
+cs476/CMakeFiles/cs476_generate_messages_py.dir/rule:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 cs476/CMakeFiles/cs476_generate_messages_py.dir/rule
+.PHONY : cs476/CMakeFiles/cs476_generate_messages_py.dir/rule
+
+# Convenience name for target.
+cs476_generate_messages_py: cs476/CMakeFiles/cs476_generate_messages_py.dir/rule
+
+.PHONY : cs476_generate_messages_py
+
+# fast build rule for target.
+cs476_generate_messages_py/fast:
+	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f cs476/CMakeFiles/cs476_generate_messages_py.dir/build.make cs476/CMakeFiles/cs476_generate_messages_py.dir/build
+.PHONY : cs476_generate_messages_py/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
 	@echo "... all (the default if no target is provided)"
 	@echo "... clean"
 	@echo "... depend"
-	@echo "... install/local"
-	@echo "... cs476_generate_messages_py"
-	@echo "... cs476_gennodejs"
-	@echo "... cs476_generate_messages_nodejs"
 	@echo "... install/strip"
-	@echo "... std_msgs_generate_messages_cpp"
-	@echo "... install"
-	@echo "... std_msgs_generate_messages_eus"
-	@echo "... cs476_genlisp"
+	@echo "... install/local"
 	@echo "... list_install_components"
-	@echo "... std_msgs_generate_messages_lisp"
-	@echo "... cs476_genpy"
-	@echo "... std_msgs_generate_messages_nodejs"
 	@echo "... cs476_generate_messages"
-	@echo "... std_msgs_generate_messages_py"
-	@echo "... cs476_generate_messages_lisp"
+	@echo "... cs476_generate_messages_nodejs"
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... cs476_generate_messages_cpp"
-	@echo "... test"
-	@echo "... cs476_gencpp"
+	@echo "... cs476_gennodejs"
 	@echo "... _cs476_generate_messages_check_deps_FloatArray"
 	@echo "... cs476_generate_messages_eus"
 	@echo "... cs476_geneus"
+	@echo "... cs476_generate_messages_lisp"
+	@echo "... cs476_genpy"
+	@echo "... cs476_gencpp"
+	@echo "... test"
+	@echo "... install"
+	@echo "... cs476_genlisp"
+	@echo "... cs476_generate_messages_py"
 .PHONY : help
 
 
