@@ -1,7 +1,11 @@
 import json, sys, os, argparse
 import matplotlib.pyplot as plt
-from scripts.discrete_search import fsearch, ALG_BFS
-from scripts.hw1 import Grid2DStates, GridStateTransition, Grid2DActions, draw_path
+from discrete_search import fsearch, ALG_BFS
+from hw1 import Grid2DStates, GridStateTransition, Grid2DActions, draw_path
+from hw2_chain_plotter import get_link_positions
+from math import radians
+
+from shapely import Polygon, Point, intersects
 
 
 LINK_ANGLES = [i - 180 for i in range(360)]
@@ -17,8 +21,61 @@ def compute_Cobs(O, W, L, D):
     @return: a list of configurations (theta_1, theta_2) of the robot that leads to a collision
         between the robot and an obstacle in O.
     """
-    # TODO: Implement this function
-    raise NotImplementedError
+    """
+        To return a list of all possible points that result in a collision
+            I need two loops to go through each angle [t1, t2] and trnslate that to world coord (x1, y1)
+            I should "move" the arm to that certain (x1, y1) position => get the polygon
+            
+            For each link:
+                For each obstacle
+                    Given two polygons, do they intersect?
+    """
+    obstacle_list = []
+    link_list = []
+    
+    C_obs = []
+    
+    for obstacle in O:
+        point_list = []
+        for obs_vertex in obstacle:
+            pt = Point(obs_vertex)
+            point_list.append(pt)
+        obstacle_list.append(Polygon(point_list))
+    
+    
+    for t1 in LINK_ANGLES:
+        for t2 in LINK_ANGLES:
+            link_list = []
+            has_collision = False
+            
+            config = (radians(t1), radians(t2))
+            _, vert_list = get_link_positions(config, W, L, D)
+            
+            for link in vert_list:
+                point_list = []
+                for vertices in link:
+                    pt = Point(vertices)
+                    point_list.append(pt)
+                link_list.append(Polygon(point_list))
+                
+            for obstacle in obstacle_list:
+                if has_collision:
+                    break
+                
+                for link in link_list:
+                    if(intersects(obstacle, link)):
+                        C_obs.append((t1, t2))
+                        has_collision = True
+                        
+                
+            
+                
+                
+                
+            
+        
+            
+            
 
 
 def compute_Cfree(Cobs):
