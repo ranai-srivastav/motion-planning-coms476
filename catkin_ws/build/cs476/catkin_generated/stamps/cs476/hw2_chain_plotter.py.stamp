@@ -163,8 +163,6 @@ def get_link_positions(config, W, L, D):
     
     vert_list = get_vertices(config, W, L, D)
     
-    print(vert_list)
-    
     return joint_list, vert_list
     
         
