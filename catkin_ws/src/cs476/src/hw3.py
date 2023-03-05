@@ -67,7 +67,7 @@ def compute_Cobs(O, W, L, D):
                         C_obs.append((t1, t2))
                         has_collision = True
                         
-    print(C_obs.shape)
+    print(len(C_obs))
                         
     return C_obs
                         
@@ -78,8 +78,11 @@ def compute_Cfree(Cobs):
                 between the robot and an obstacle in O.
     @return an instance of Grid2DStates that represents the free space
     """
-    # TODO: Implement this function
-    raise NotImplementedError
+    
+    Cfree = Grid2DStates(-180, 180, -180, 180, Cobs)
+    
+    return Cfree
+    
 
 
 def parse_args():
