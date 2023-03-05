@@ -67,16 +67,10 @@ def compute_Cobs(O, W, L, D):
                         C_obs.append((t1, t2))
                         has_collision = True
                         
-                
-            
-                
-                
-                
-            
-        
-            
-            
-
+    print(C_obs.shape)
+                        
+    return C_obs
+                        
 
 def compute_Cfree(Cobs):
     """Compute the free space for a 2-link robot

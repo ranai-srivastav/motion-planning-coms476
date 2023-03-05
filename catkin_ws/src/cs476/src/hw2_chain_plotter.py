@@ -1,18 +1,18 @@
 #!/usr/bin/env python
 import rospy
 import matplotlib.pyplot as plt
-from cs476.msg import Chain2D
+# from cs476.msg import Chain2D
 import numpy
 import math
 
-def get_chain_msg():
-    """Return a message from the "chain_config" channel.
-    This function will wait until a message is received.
-    """
-    rospy.init_node("chain_recv", anonymous=True)
-    recv_msg = rospy.wait_for_message("chain_config", Chain2D)
-    rospy.loginfo(f"Got config as {recv_msg.config} and W={recv_msg.W}, L={recv_msg.L}, D={recv_msg.D}")
-    return recv_msg
+# def get_chain_msg():
+#     """Return a message from the "chain_config" channel.
+#     This function will wait until a message is received.
+#     """
+#     rospy.init_node("chain_recv", anonymous=True)
+#     recv_msg = rospy.wait_for_message("chain_config", Chain2D)
+#     rospy.loginfo(f"Got config as {recv_msg.config} and W={recv_msg.W}, L={recv_msg.L}, D={recv_msg.D}")
+#     return recv_msg
 
 
 def plot_chain(config, W, L, D):

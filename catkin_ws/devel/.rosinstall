@@ -1,2 +1,2 @@
 - setup-file:
-    local-name: /workspaces/mp-planning-COMS476/motion-planning-coms476/catkin_ws/devel/setup.sh
+    local-name: /root/motion-planning-coms476/catkin_ws/devel/setup.sh
