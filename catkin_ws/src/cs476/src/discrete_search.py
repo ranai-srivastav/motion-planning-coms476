@@ -1,3 +1,6 @@
+import math
+from DataStructs import Queue, QueueBFS, QueueDFS, QueueAstar
+
 ALG_BFS = "bfs"
 ALG_DFS = "dfs"
 ALG_ASTAR = "astar"
@@ -31,18 +34,6 @@ class StateTransition:
         raise NotImplementedError
 
 
-def path_gen(goal_state, parents):
-    path = []
-    state = goal_state
-
-    while state is not None:
-        path.append(state)
-        state = parents[state][0]
-
-    path.reverse()
-    return path
-
-
 def fsearch(X, U, f, xI, XG, alg):
     """Return the list of visited nodes and a path from xI to XG based on the given algorithm
 
@@ -60,39 +51,48 @@ def fsearch(X, U, f, xI, XG, alg):
     @return:   a dictionary {"visited": visited_states, "path": path} where visited_states is the list of
                states visited during the search and path is a path from xI to a state in XG
     """
-    from DataStructs import QueueBFS, QueueDFS, QueueAStar
+    if not (xI in X):
+        return {"visited": [], "path": []}
 
-    visited = list()
-    parents = {xI: (None, 0)}
+    Q = get_queue(alg, X, XG)
+    Q.insert(xI, None)
 
-    if alg == "bfs":
-        data_structure = QueueBFS()
-    elif alg == "dfs":
-        data_structure = QueueDFS()
-    else:
-        data_structure = QueueAStar(X, XG, xI, parents)
+    while len(Q) > 0:
+        x = Q.pop()
+        if x in XG:
+            return {"visited": Q.get_visited(), "path": Q.get_path(xI, x)}
+        for u in U(x):
+            xp = f(x, u)
+            Q.insert(xp, x)
 
-    # inserts it into the appropriate data structure based on the dynamic type
-    data_structure.insert(xI)
-    visited.append(xI)
-
-    # do only while there are no other nodes to process
-    while not data_structure.is_empty():
-        curr = data_structure.pop()
-
-        if curr in XG:
-            return {"visited": list(visited), "path": path_gen(curr, parents)}
-
-        for neighbor in U(curr):
-            if neighbor not in visited:
-                visited.append(neighbor)
-                parents[neighbor] = (curr, parents[curr][1] + 1)
-                data_structure.insert(neighbor)
-            else:
-                if (neighbor[0] != xI[0] and neighbor[1] != xI[1]) or neighbor != xI:
-                    if parents[curr][1] + 1 < parents[neighbor][1]:
-                        parents[neighbor] = (curr, parents[neighbor][1] + 1)
-                        
+    return {"visited": Q.get_visited(), "path": []}
 
 
-    return list(), list()
+def get_queue(alg, X, XG):
+    """Return the corresponding queue for a given algorithm
+
+    @type alg: a string in {"bfs", "dfs", "astar"} that specifies the discrete search algorithm to use
+    @type X:   an instance of the StateSpace class (or its derived class) that represent the state space
+    @type XG:  a list of states that specify the goal set
+    """
+
+    class CostToGoEstimator:
+        def __init__(self, X, XG):
+            self.X = X
+            self.XG = XG
+
+        def get_lower_bound(self, x):
+            """Return the lower bound on the distance between the given state x and the goal set XG"""
+            min_cost = math.inf
+            for xG in XG:
+                cost = self.X.get_distance_lower_bound(x, xG)
+                min_cost = min(min_cost, cost)
+            return min_cost
+
+    if alg == ALG_BFS:
+        return QueueBFS()
+    elif alg == ALG_DFS:
+        return QueueDFS()
+    elif alg == ALG_ASTAR:
+        return QueueAstar(CostToGoEstimator(X, XG))
+    return Queue()

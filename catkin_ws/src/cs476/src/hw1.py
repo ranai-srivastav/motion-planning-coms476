@@ -2,7 +2,7 @@ import json, sys, os, argparse
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib import colors
-from matplotlib.ticker import AutoMinorLocator
+from matplotlib.ticker import FixedLocator
 from discrete_search import (
     StateSpace,
     ActionSpace,
@@ -29,18 +29,17 @@ class Grid2DStates(StateSpace):
         self.O = O
 
     def __contains__(self, x):
-        # Checks if an object is not in an obstacle and is in bounds
-        if x[0] < self.Xmin or x[0] > self.Xmax or x[1] < self.Ymin or x[1] > self.Ymax:
-            return False
-
-        for obs in self.O:
-            if x[0] == obs[0] and x[1] == obs[1]:
-                return False
-
-        return True
+        return (
+            x[0] >= self.Xmin
+            and x[0] <= self.Xmax
+            and x[1] >= self.Ymin
+            and x[1] <= self.Ymax
+            and x not in self.O
+        )
 
     def get_distance_lower_bound(self, x1, x2):
-        return abs(x1[0] - x2[0]) + abs(x1[0] - x2[0])
+        """Return the lower bound on the distance between the given states x1 and x2"""
+        return sum([abs(x1[i] - x2[i]) for i in range(len(x1))])
 
     def draw(self, ax, grid_on=True, tick_step=[1, 1]):
         G = np.zeros((self.Ymax - self.Ymin + 1, self.Xmax - self.Xmin + 1))
@@ -73,30 +72,25 @@ class Grid2DStates(StateSpace):
         ax.set_xticks(np.arange(self.Xmin, self.Xmax + 1, tick_step[0]))
         ax.set_yticks(np.arange(self.Ymin, self.Ymax + 1, tick_step[1]))
 
-        minor_locator = AutoMinorLocator(2)
         ax.tick_params(which="minor", width=0)
         ax.tick_params(which="minor", length=0)
-        ax.xaxis.set_minor_locator(minor_locator)
-        ax.yaxis.set_minor_locator(minor_locator)
+        ax.xaxis.set_minor_locator(
+            FixedLocator([x + 0.5 for x in range(self.Xmin, self.Xmax)])
+        )
+        ax.yaxis.set_minor_locator(
+            FixedLocator([y + 0.5 for y in range(self.Ymin, self.Ymax)])
+        )
 
         ax.set_xlim(self.Xmin - 0.5, self.Xmax + 0.5)
         ax.set_ylim(self.Ymin - 0.5, self.Ymax + 0.5)
 
 
 class GridStateTransition(StateTransition):
-    """
-    Returns a new state obtained by applying action u at state x
-    """
-
     def __call__(self, x, u):
-        return tuple( [x[0] + u[0], x[1] + u[1]] )
+        return tuple([x[i] + u[i] for i in range(len(x))])
 
 
 class Grid2DActions(ActionSpace):
-    """
-    A list of 4 things, each a move in the 4 cardinal directions.
-    """
-
     all_actions = [(0, 1), (0, -1), (-1, 0), (1, 0)]
 
     def __init__(self, X, f):
@@ -104,13 +98,7 @@ class Grid2DActions(ActionSpace):
         self.f = f
 
     def __call__(self, x):
-        # creates a list and returns the possible moves that can be taken
-        all_moves = []
-        for action in Grid2DActions.all_actions:
-            x_ = self.f(x, action)
-            if x_ in self.X:
-                all_moves.append(x_)
-        return all_moves
+        return [u for u in Grid2DActions.all_actions if self.f(x, u) in self.X]
 
 
 def parse_args():
@@ -143,7 +131,7 @@ def parse_args():
     args = parser.parse_args(sys.argv[1:])
     if not args.out:
         args.out = (
-                os.path.splitext(os.path.basename(args.desc))[0] + "_" + args.alg + ".json"
+            os.path.splitext(os.path.basename(args.desc))[0] + "_" + args.alg + ".json"
         )
 
     print("Problem description: ", args.desc)

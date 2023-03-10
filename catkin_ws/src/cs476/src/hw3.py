@@ -4,11 +4,13 @@ from discrete_search import fsearch, ALG_BFS
 from hw1 import Grid2DStates, GridStateTransition, Grid2DActions, draw_path
 from hw2_chain_plotter import get_link_positions
 from math import radians
+import numpy
 
 from shapely import Polygon, Point, intersects
 
 
 LINK_ANGLES = [i - 180 for i in range(360)]
+obstacle_list = []
 
 
 def compute_Cobs(O, W, L, D):
@@ -30,10 +32,10 @@ def compute_Cobs(O, W, L, D):
                 For each obstacle
                     Given two polygons, do they intersect?
     """
-    obstacle_list = []
+    # obstacle_list = []
     link_list = []
     
-    C_obs = []
+    C_obs = set()
     
     for obstacle in O:
         point_list = []
@@ -64,9 +66,11 @@ def compute_Cobs(O, W, L, D):
                 
                 for link in link_list:
                     if(intersects(obstacle, link)):
-                        C_obs.append((t1, t2))
+                        C_obs.add((t1, t2))
                         has_collision = True
-                        
+                       
+    C_obs = list(C_obs)
+    sorted(C_obs)
     print(len(C_obs))
                         
     return C_obs
@@ -129,6 +133,20 @@ def parse_desc(desc):
     return (O, W, L, D, xI, XG, U)
 
 
+def finer_discretization_hw_3_ec(search_result):
+    for i in range(len(search_result["path"])-1):
+        p1 = numpy.array(search_result["path"][i])
+        p2 = numpy.array(search_result["path"][i+1])
+        
+        dir = p1 - p2
+        dir = 0.1 * dir
+
+        for i in range(1, 10):
+            temp = p1 + dir * i
+            for obs in obstacle_list:
+                if obs.contains(Point(temp)):
+                    print(temp)
+
 if __name__ == "__main__":
     args = parse_args()
     (O, W, L, D, xI, XG, U) = parse_desc(args.desc)
@@ -139,7 +157,9 @@ if __name__ == "__main__":
     U = Grid2DActions(X, f)
 
     search_result = fsearch(X, U, f, xI, XG, ALG_BFS)
-
+    
+    finer_discretization_hw_3_ec(search_result)
+    
     result = {"Cobs": Cobs, "path": search_result["path"]}
 
     with open(args.out, "w") as outfile:
