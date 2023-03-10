@@ -70,8 +70,8 @@ def compute_Cobs(O, W, L, D):
                         has_collision = True
                        
     C_obs = list(C_obs)
-    sorted(C_obs)
-    print(len(C_obs))
+    C_obs = sorted(C_obs)
+    # print(len(C_obs))
                         
     return C_obs
                         
@@ -138,7 +138,7 @@ def finer_discretization_hw_3_ec(search_result):
         p1 = numpy.array(search_result["path"][i])
         p2 = numpy.array(search_result["path"][i+1])
         
-        dir = p1 - p2
+        dir = p2 - p1
         dir = 0.1 * dir
 
         for i in range(1, 10):
