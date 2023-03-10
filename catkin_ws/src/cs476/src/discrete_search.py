@@ -88,10 +88,10 @@ def fsearch(X, U, f, xI, XG, alg):
                 visited.append(neighbor)
                 parents[neighbor] = (curr, parents[curr][1] + 1)
                 data_structure.insert(neighbor)
-            else:
-                if (neighbor[0] != xI[0] and neighbor[1] != xI[1]) or neighbor != xI:
-                    if parents[curr][1] + 1 < parents[neighbor][1]:
-                        parents[neighbor] = (curr, parents[neighbor][1] + 1)
+            # else:
+                # if (neighbor[0] != xI[0] and neighbor[1] != xI[1]) or neighbor != xI:
+                #     if parents[curr][1] + 1 < parents[neighbor][1]:
+                #         parents[neighbor] = (curr, parents[neighbor][1] + 1)
                         
 
 
