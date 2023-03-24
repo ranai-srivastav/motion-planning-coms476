@@ -68,7 +68,8 @@ def compute_Cobs(O, W, L, D):
                     if(intersects(obstacle, link)):
                         C_obs.add((t1, t2))
                         has_collision = True
-                       
+    
+    # Using a set to ensure checking conditions is O(1)
     C_obs = list(C_obs)
     C_obs = sorted(C_obs)
     # print(len(C_obs))
