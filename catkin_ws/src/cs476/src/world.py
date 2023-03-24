@@ -7,12 +7,24 @@ class World:
         self.x_max = x_max
         self.y_min = y_min
         self.y_max = y_max
+        
+        self.length = x_max - x_min
+        self.width = y_max - y_min
     
     def get_x_min(self):
         return self.x_min
+    
     def get_x_max (self):
         return self.x_max
+    
     def get_y_min(self):
         return self.y_min
+    
     def get_y_max(self):
         return self.y_max
+    
+    def get_length(self):
+        return self.length
+    
+    def get_width(self):
+        return self.width
