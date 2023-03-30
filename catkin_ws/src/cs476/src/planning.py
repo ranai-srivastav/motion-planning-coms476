@@ -47,7 +47,6 @@ class RRT:
             # TODO make this addRandomPointToGraph() method
             closest_edge = self.rrt_graph.get_closest_edge(new_point)
             print(closest_edge)
-            # TODO get the point on the edge, not the randomly gen point
             edge1, edge2, closest_point_on_edge = closest_edge.split_edge(new_point)
             self.rrt_graph.rm_edge(closest_edge)
             # TODO if one of them is null, no need to remove
