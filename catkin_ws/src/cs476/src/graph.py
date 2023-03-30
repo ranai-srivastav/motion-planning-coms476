@@ -13,27 +13,32 @@ class Graph:
             
     def add_edge(self, e1:Edge):
         
-        self.add_vertex([e1.point1])
-        self.add_vertex([e1.point2])
+        if e1 != None:
+            self.add_vertex(e1.point1)
+            self.add_vertex(e1.point2)
+            
+            self.adj_list[e1.point1].append(e1.point2)
+            self.adj_list[e1.point2].append(e1.point1)
         
-        self.adj_list[e1.point1].append(e1.point2)
-        self.adj_list[e1.point2].append(e1.point1)
+    def rm_edge(self, e:Edge):
+        self.adj_list[e.point1].remove(e.point2)
+        self.adj_list[e.point2].remove(e.point1)
     
     def get_neighbors(self, vertex: Point):
         return self.adj_list[vertex]
                 
-    def get_all_graph_edges(self):
+    def get_all_graph_edges(self) -> list:
         edges = []
         
-        for org in self.adj_list.keys:
+        for org in self.adj_list.keys():
             for v in self.get_neighbors(org):
                 edges.append(Edge(org, v))
         
         return edges
     
-    def get_closest_edge(self, point: Point):
+    def get_closest_edge(self, point: Point) -> Edge:
         
-        min_edge, min_dist = Edge(), -1
+        min_edge, min_dist = Edge(-1, -1), -1
         
         edges = self.get_all_graph_edges()
         

@@ -44,7 +44,11 @@ class RRT:
             
             #TODO make this addRandomPointToGraph() method
             closest_edge = self.rrt_graph.get_closest_edge(new_point)
-            closest_edge.split_edge()
+            edge1, edge2 = closest_edge.split_edge(new_point)
+            self.rrt_graph.rm_edge(closest_edge)
+            self.rrt_graph.add_edge(edge1)
+            self.rrt_graph.add_edge(edge2)
+            
             
             
             

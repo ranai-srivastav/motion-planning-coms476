@@ -1,9 +1,10 @@
 from shapely import Polygon, LineString
+import shapely
 import numpy
 from functools import total_ordering
 
 class Point:
-    def __init__(self, x1, y1, parent = None) -> None:
+    def __init__(self, x1:float, y1:float, parent = None) -> None:
         self.x = x1
         self.y = y1
         self.parent = parent
@@ -13,6 +14,9 @@ class Point:
         return isinstance(__value, Point ) and \
             __value.x == self.x and \
             __value.y == self.y
+    
+    def __hash__(self):
+        return hash(f"{self.x} {self.y}")
     
     # @total_ordering
     # def __lt__(self, __value: object) -> bool:
@@ -30,7 +34,7 @@ class Point:
 
 
 class Edge:
-    def __init__(self, point1, point2) -> None:
+    def __init__(self, point1:Point, point2:Point) -> None:
         self.point1 = point1
         self.point2 = point2
         
@@ -72,8 +76,8 @@ class Edge:
         
         
     def get_discritized_edge(self, step_size):
-        point1 = Point(self.point1.x, self.point1.y)
-        point2 = Point(self.point2.x, self.point2.y)
+        point1 = shapely.Point(self.point1.x, self.point1.y)
+        point2 = shapely.Point(self.point2.x, self.point2.y)
         line = LineString([point1, point2])
         length = line.length
         num_segments = int(length / step_size) + 1
@@ -91,3 +95,20 @@ class Edge:
     #     edge2 = Edge(closet_point_on_edge, edge.point2)
         
     #     return (edge1, edge2)
+    
+    def split_edge(self, point:Point):
+        
+        closet_point_on_edge = self.get_nearest_point(point)
+        
+        edge1 = Edge(self.point1, closet_point_on_edge)
+        edge2 = Edge(closet_point_on_edge, self.point2)
+        
+        if closet_point_on_edge == self.point1:
+            None, edge2
+        
+        if closet_point_on_edge == self.point2:
+            edge1, None
+        
+        return edge1, edge2
+    
+    
