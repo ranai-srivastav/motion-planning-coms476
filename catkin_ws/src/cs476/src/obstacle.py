@@ -1,7 +1,7 @@
 from shapely import Polygon
 import shapely.affinity
 from shapely.geometry import Point
-from .world import World
+from world import World
 
 class Obstacles:
     """Class that stores a list of Obstacles as Shapely Polygons

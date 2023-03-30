@@ -12,22 +12,30 @@ def run_prm():
 def print_world(obstacles: list):
     x1, y1 = obstacles[0].exterior.xy
     x2, y2 = obstacles[1].exterior.xy
-    print()
-    fig = plt.figure(figsize=(60, 10))
+
+    plt.figure(figsize=(60, 10))
     plt.plot(x1, y1)
     plt.plot(x2, y2)
     plt.xlim((world.get_x_min(), world.get_x_max()))
     plt.ylim((world.get_y_min(), world.get_y_max()))
     
     plt.show()
+    
+    
 
 if __name__ == '__main__':
+    
+    dt = -1
+    
     parser = argparse.ArgumentParser()
     
     parser.add_argument("--rrt", action="store_true")
     parser.add_argument("--prm", action="store_true")
-    
+    parser.add_argument("--dt", type=float)
+
     args = parser.parse_args()
+    
+    print(args.dt)
     
     world = World(-3., 3., -1., 1.)
     cir_obs = CircularObstacle()
@@ -45,6 +53,6 @@ if __name__ == '__main__':
         print("Running RRT")
         run_prm()
     else:
-        print("usage: python3 HW4.py [--rrt/--prm]")
+        print("usage: python3 HW4.py [--rrt/--prm] [--dt]")
         print("You will have to select either PRM or RRT")
         print("If you included both, RRT will run")
