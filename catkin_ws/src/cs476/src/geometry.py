@@ -53,14 +53,15 @@ class Edge:
 
     @staticmethod
     def get_two_point_euclidean_distance(point1: Point, point2: Point) -> float:
-        return (point1.x - point2.x) ** 2 + (point1.y - point2.y) ** 2
+        return (point1.x - point2.x) ** 2. + (point1.y - point2.y) ** 2.
 
     def get_nearest_point(self, p: Point):
         vp_1 = numpy.array([p.x - self.point1.x, p.y - self.point1.y])
         v2_1 = numpy.array([self.point2.x - self.point1.x, self.point2.y - self.point1.y])
 
-        # print(type(self.get_euclidean_distance()))
-        t_dash = (vp_1 @ v2_1) / (self.get_euclidean_distance())
+        if self.get_euclidean_distance() == 0:
+            print("GOT A ")
+        t_dash = (vp_1 @ v2_1) / self.get_euclidean_distance()
         t_dash = max(0, min(t_dash, 1))
 
         if t_dash == 0:
