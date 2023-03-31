@@ -19,11 +19,11 @@ class Graph:
             self.add_vertex(e1.point2)
 
             self.adj_list[e1.point1].append(e1.point2)
-            self.adj_list[e1.point2].append(e1.point1)
+            # self.adj_list[e1.point2].append(e1.point1)
 
     def rm_edge(self, e: Edge):
         self.adj_list[e.point1].remove(e.point2)
-        self.adj_list[e.point2].remove(e.point1)
+        # self.adj_list[e.point2].remove(e.point1)
 
     def get_neighbors(self, vertex: Point):
         return self.adj_list[vertex]

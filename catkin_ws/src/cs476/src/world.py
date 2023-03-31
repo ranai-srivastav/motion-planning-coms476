@@ -2,13 +2,14 @@ class World:
     """A square world
     """
     
-    def __init__(self, x_min, x_max, y_min, y_max, dt, xG, xI) -> None:
+    def __init__(self, x_min, x_max, y_min, y_max, dt, step_size, xG, xI) -> None:
         self.x_min = x_min
         self.x_max = x_max
         self.y_min = y_min
         self.y_max = y_max
 
         self.dt = dt
+        self.step_size = step_size
         
         self.init_state = xI
         self.goal_state = xG
@@ -39,3 +40,6 @@ class World:
     
     def get_goal_state(self):
         return self.goal_state
+
+    def get_step_size(self):
+        return self.step_size
