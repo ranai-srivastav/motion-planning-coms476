@@ -5,6 +5,8 @@ from functools import total_ordering
 
 
 class Point:
+    """Point/vertex class for Graph. Each point represents a state in the CSpace
+    """
     def __init__(self, x1: float, y1: float, parent=None) -> None:
         self.x = x1
         self.y = y1
@@ -37,6 +39,9 @@ class Point:
 
 
 class Edge:
+    """Edge class for the Graph. Represents the transition from one state in CSpace to another
+
+    """
     def __init__(self, point1: Point, point2: Point) -> None:
         self.point1 = point1
         self.point2 = point2
@@ -56,9 +61,20 @@ class Edge:
 
     @staticmethod
     def get_two_point_euclidean_distance(point1: Point, point2: Point) -> float:
+        """ A static method that returns the Euclidean distance between two given points
+
+        @param point1:
+        @param point2:
+        @return: The eucliden distance L2 Norm between two points
+        """
         return (point1.x - point2.x) ** 2. + (point1.y - point2.y) ** 2.
 
     def get_nearest_point(self, p: Point):
+        """ Projects a line onto this vector and gets the point closest to the given point on this edge
+
+        @param p:
+        @return:
+        """
         numpy.seterr(invalid='ignore')
         vp_1 = numpy.array([p.x - self.point1.x, p.y - self.point1.y])
         v2_1 = numpy.array([self.point2.x - self.point1.x, self.point2.y - self.point1.y])
@@ -82,6 +98,11 @@ class Edge:
         obstacle.contains(obstacle)
 
     def get_discritized_edge(self, step_size):
+        """Uses shapely to return a discretization of the edge
+
+        @param step_size:
+        @return:
+        """
         point1 = shapely.Point(self.point1.x, self.point1.y)
         point2 = shapely.Point(self.point2.x, self.point2.y)
         line = LineString([point1, point2])
@@ -103,6 +124,11 @@ class Edge:
     #     return (edge1, edge2)
 
     def split_edge(self, point: Point):
+        """Splits an edge into two and returns the two edges and the split point. This method calls get nearest point
+
+        @param point: The point ( It can be completely separate from the line) that determines how to split
+        @return:
+        """
 
         closet_point_on_edge = self.get_nearest_point(point)
         # TODO Can create circular dependency

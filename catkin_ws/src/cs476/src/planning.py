@@ -8,19 +8,25 @@ from random import randint, uniform
 
 
 class DistanceComputator:
-
     @staticmethod
     def EuclideanDistanceComputator(vertex1, vertex2):
         return Edge.get_two_point_euclidean_distance(vertex1, vertex2)
 
 
 class CollisionChecker:
+    """ Class that checks for collisions with circular obstacles
+    """
     def __init__(self, obs: list, world: World):
         self.obstacle_list = obs
         self.world = world
         self.circ_obs_radius = (world.get_width() - world.dt) / 2.0
 
     def edge_in_collision(self, edge: Edge) -> bool:
+        """
+        Returns a boolean value that signifies if an edge ever intersects with another shape
+        @param edge:
+        @return:
+        """
         line = LineString([[edge.point1.x, edge.point1.y], [edge.point2.x, edge.point2.y]])
 
         for obs in self.obstacle_list:
@@ -29,6 +35,11 @@ class CollisionChecker:
         return False
 
     def point_in_obs(self, point: Point) -> bool:
+        """
+        Method to check if a point is inside an obstacle
+        @param point: The point to be checked
+        @return: boolean value signifying if the point is inside/on the boundary of an obstacle or not
+        """
         for obs in self.obstacle_list:
             if obs.contains(shapely.Point(point.x, point.y)):
                 return True
@@ -40,7 +51,7 @@ class CollisionChecker:
         return False
 
     def closest_pt_on_line_outside_obs(self, edge: Edge):
-        """
+        """Returns the closest point on a line to an obstacle but one that is not in contact with the obstacle
 
         @param edge:
         @return:
@@ -56,13 +67,16 @@ class CollisionChecker:
         return discretizations[-1]
 
 class RandomPointGenerator:
+    """
+    Class to generate random points
+    """
     def __init__(self, world: World):
         self.world = world
 
-    def __call__(self):
+    def __call__(self, add_goal=True):
         choose_goal = randint(0, 100) <= 10
 
-        if choose_goal:
+        if choose_goal and add_goal:
             return self.world.get_goal_state()
         else:
             x = round(uniform(self.world.get_x_min(), self.world.get_x_max()), 2)
@@ -71,6 +85,8 @@ class RandomPointGenerator:
 
 
 class RRT:
+    """Main class for RRT Planning
+    """
     def __init__(self, world: World, obs: Obstacles, max_iter: int = 1000):
         self.world = world
         self.obs = obs
@@ -80,6 +96,10 @@ class RRT:
         self.rrt_graph = Graph(world.get_step_size())
 
     def rrt_exploration(self):
+        """ exploration without considering obstacles. Creates the graph but does not print
+
+        @return: Nothing
+        """
 
         self.rrt_graph.add_vertex(self.world.get_init_state())
         self.rrt_graph.add_edge(Edge(self.world.get_init_state(), self.get_random_point()))
@@ -98,6 +118,10 @@ class RRT:
             self.rrt_graph.add_edge(Edge(closest_point_on_edge, new_point))
 
     def rrt_exploration_with_collisions(self):
+        """State space exploration keeping obstacles in mind. Creates the graph but does not print
+
+        @return: Nothing
+        """
 
         collision_detector = CollisionChecker(self.obs.get_obstacles(), self.world)
 
@@ -128,6 +152,10 @@ class RRT:
             self.rrt_graph.add_edge(ai_edge)
 
     def rrt_path_gen(self):
+        """Generate a point from the Goal_State defined in main in HW4.py
+
+        @return:
+        """
         collision_detector = CollisionChecker(self.obs.get_obstacles(), self.world)
 
         self.rrt_graph.add_vertex(self.world.get_init_state())
@@ -166,7 +194,14 @@ class RRT:
             if ai_edge.point2 == self.world.get_goal_state():
                 break
             if ai_edge.point1 == self.world.get_goal_state():
-                print("ARE YOUR EDGES REVERSED")
+                print("ARE YOUR EDGES REVERSED?!")
                 break
 
+class PRM:
+    def __init__(self, world, obs, max_iter):
+        self.world = world
+        self.obs = obs
+        self.max_iter = max_iter
+        self.get_random_point = RandomPointGenerator(world)
 
+        self.rrt_graph = Graph(world.get_step_size())

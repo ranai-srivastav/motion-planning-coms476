@@ -26,6 +26,14 @@ def run_prm():
 
 
 def print_world(obstacles: list, world: World, graph: Graph, print_path: bool = False):
+    """
+
+    @param obstacles: a list of obstacles in the world. each obstacle to be a shapely Polygon
+    @param world:
+    @param graph:
+    @param print_path:
+    @return:
+    """
     x1, y1 = obstacles[0].exterior.xy
     x2, y2 = obstacles[1].exterior.xy
 
@@ -88,7 +96,7 @@ if __name__ == '__main__':
     #################################
     default_step_size = 0.05
     xG = Point(2., -0.5)
-    xI = Point(-2., -0.5)
+    xI = Point(0, -1.)
 
     dt = -1 # Define dt using the cmd args --dt=[value]
 

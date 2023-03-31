@@ -1,5 +1,7 @@
 class World:
-    """A square world
+    """A square world and all other user defined variables are initalized here
+
+    The classs contains getters for all members
     """
     
     def __init__(self, x_min, x_max, y_min, y_max, dt, step_size, xG, xI) -> None:
