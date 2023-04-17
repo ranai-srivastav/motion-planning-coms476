@@ -1,33 +1,87 @@
-from shapely import Polygon
-import shapely.affinity
+import math
+from geometry import is_inside_circle
 import shapely
-from world import World
+from link_utils import get_link_positions
 
 
-class Obstacles:
-    """Class that stores a list of Obstacles as Shapely Polygons
-    
-    Class contains methods to add to the list of Obstacles 
-    """
-
-    def __init__(self) -> None:
-        self.list_of_obstacles = []
-
-    def get_obstacles(self):
-        return self.list_of_obstacles
-
-    def add_to_obstacle_list(self, obs: Polygon):
-        self.list_of_obstacles.append(obs)
+class Obstacle:
+    def contain(self, s):
+        return False
 
 
-class CircularObstacle:
-    """Creates the 2 circular obstacles for HW4
-    """
+class CircularObstacle(Obstacle):
+    """A class representing a circular obstacle"""
 
-    def __call__(self, dt, world: World):
-        self.radius = (world.get_width() - dt) / 2.0
+    def __init__(self, center, radius, theta_lim):
+        self.center = center
+        self.radius = radius
+        self.theta_min = theta_lim[0]
+        self.theta_max = theta_lim[1]
 
-        bot_circle = shapely.geometry.Point(0, world.get_y_max()).buffer(self.radius)
-        top_circle = shapely.geometry.Point(0, world.get_y_min()).buffer(self.radius)
+    def get_boundaries(self):
+        """Return the list of coordinates (x,y) of the boundary of the obstacle"""
+        num_theta = 100
+        theta_inc = (self.theta_max - self.theta_min) / num_theta
+        theta_range = [self.theta_min + theta_inc * i for i in range(num_theta + 1)]
+        return [
+            (
+                self.radius * math.cos(theta) + self.center[0],
+                self.radius * math.sin(theta) + self.center[1],
+            )
+            for theta in theta_range
+        ]
 
-        return bot_circle, top_circle
+    def contain(self, s):
+        """Return whether a point s is inside this obstacle"""
+        return is_inside_circle(self.center, self.radius, s)
+
+
+class WorldBoundary2D(Obstacle):
+    """A class representing the world"""
+
+    def __init__(self, xlim, ylim):
+        self.xmin = xlim[0]
+        self.xmax = xlim[1]
+        self.ymin = ylim[0]
+        self.ymax = ylim[1]
+
+    def contain(self, s):
+        """Return True iff the given point is not within the boundary (i.e., the point is
+        "in collision" with an obstacle.).
+        """
+        return (
+                s[0] < self.xmin or s[0] > self.xmax or s[1] < self.ymin or s[1] > self.ymax
+        )
+
+
+def construct_circular_obstacles(dt):
+    r = 1 - dt  # the radius of the circle
+    c = [(0, -1), (0, 1)]  # the center of each circle
+    t = [(0, math.pi), (-math.pi, 0)]  # range of theta of each circle
+    obstacles = []
+    for i in range(len(c)):
+        obstacles.append(CircularObstacle(c[i], r, t[i]))
+    return obstacles
+
+
+class LinkObstacle(Obstacle):
+    def __init__(self, O, W, L, D):
+        self.list_of_vertices = O
+        self.shapely_poly = shapely.Polygon(self.list_of_vertices)
+        self.W = W
+        self.L = L
+        self.D = D
+
+    def contain(self, config):
+        """ Is point p contained inside any obstacle?
+
+        @param p:
+        @return:
+        """
+        _, link_vertices = get_link_positions(config, self.W, self.L, self.D)
+
+        for link_vertex in link_vertices:
+            if self.shapely_poly.intersects(shapely.Polygon(link_vertex)):
+                return True
+
+        return False

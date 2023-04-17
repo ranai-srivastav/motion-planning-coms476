@@ -1,207 +1,299 @@
+import random
+import numpy as np
 import shapely
-from shapely import LineString
-from graph import Graph
-from geometry import Edge, Point
-from world import World
-from obstacle import Obstacles
-from random import randint, uniform
+
+from graph import Tree, GraphCC
+from edge import EdgeStraight
+from geometry import get_euclidean_distance
+from link_utils import get_link_positions
 
 
+##############################################################################
+# Classes for creating an edge
+##############################################################################
+class EdgeCreator:
+    def make_edge(self, s1, s2):
+        """Return an Edge object beginning at state s1 and ending at state s2"""
+        raise NotImplementedError
+
+
+class StraightEdgeCreator(EdgeCreator):
+    def __init__(self, step_size):
+        self.step_size = step_size
+
+    def make_edge(self, s1, s2):
+        return EdgeStraight(s1, s2, self.step_size)
+
+
+##############################################################################
+# Classes for computing distance between 2 points
+##############################################################################
 class DistanceComputator:
-    @staticmethod
-    def EuclideanDistanceComputator(vertex1, vertex2):
-        return Edge.get_two_point_euclidean_distance(vertex1, vertex2)
+    def get_distance(self, s1, s2):
+        """Return the distance between s1 and s2"""
+        raise NotImplementedError
 
 
+class EuclideanDistanceComputator(DistanceComputator):
+    def get_distance(self, s1, s2):
+        """Return the Euclidean distance between s1 and s2"""
+        return get_euclidean_distance(s1, s2)
+
+
+##############################################################################
+# Classes for collision checking
+##############################################################################
 class CollisionChecker:
-    """ Class that checks for collisions with circular obstacles
-    """
-    def __init__(self, obs: list, world: World):
-        self.obstacle_list = obs
-        self.world = world
-        self.circ_obs_radius = (world.get_width() - world.dt) / 2.0
+    def is_in_collision(self, state):
+        """Return whether the given state is in collision"""
+        raise NotImplementedError
 
-    def edge_in_collision(self, edge: Edge) -> bool:
-        """
-        Returns a boolean value that signifies if an edge ever intersects with another shape
-        @param edge:
-        @return:
-        """
-        line = LineString([[edge.point1.x, edge.point1.y], [edge.point2.x, edge.point2.y]])
+    def is_checking_required(self):
+        """Return whether collision needs to be checked at all"""
+        raise NotImplementedError
 
-        for obs in self.obstacle_list:
-            if obs.intersects(line):
+
+class EmptyCollisionChecker(CollisionChecker):
+    def is_in_collision(self, state):
+        """Return whether the given state is in collision"""
+        return False
+
+    def is_checking_required(self):
+        """Return whether collision needs to be checked at all"""
+        return False
+
+
+class ObstacleCollisionChecker(CollisionChecker):
+    def __init__(self, obstacles):
+        """The constructor
+
+        @type obstacles: a list [obs_1, ..., obs_m] of obstacles, where obs_i is an Obstacle
+            object that include a contain(s) function, which returns whether a state s
+            is inside the obstacle
+        """
+        self.obstacles = obstacles
+
+    def is_in_collision(self, s):
+        """Return whether the point s is in collision with the obstacles"""
+        for obs in self.obstacles:
+            if obs.contain(s):
                 return True
         return False
 
-    def point_in_obs(self, point: Point) -> bool:
+    def is_checking_required(self):
+        """Return whether collision needs to be checked at all"""
+        return True
+
+
+class LinkCollisionChecker(CollisionChecker):
+    """
+
+    """
+    def __init__(self, W, L, D, obstacles):
+        self.W = W
+        self.L = L
+        self.D = D
+        self.list_of_obstacles = obstacles
+
+    def is_in_collision(self, config: list):
         """
-        Method to check if a point is inside an obstacle
-        @param point: The point to be checked
-        @return: boolean value signifying if the point is inside/on the boundary of an obstacle or not
-        """
-        for obs in self.obstacle_list:
-            if obs.contains(shapely.Point(point.x, point.y)):
-                return True
-
-        if Edge.get_two_point_euclidean_distance(point, Point(0, 1)) <= self.circ_obs_radius:
-            return True
-        if Edge.get_two_point_euclidean_distance(point, Point(0, -1)) <= self.circ_obs_radius:
-            return True
-        return False
-
-    def closest_pt_on_line_outside_obs(self, edge: Edge):
-        """Returns the closest point on a line to an obstacle but one that is not in contact with the obstacle
-
-        @param edge:
+        @param config: A list with n elements, each element is the angle formed between a link A[i] and the previous link A[i-1]
         @return:
         """
-        discretizations = edge.get_discritized_edge(self.world.get_step_size())
 
-        prev_point = discretizations[0]
-        for point_on_line in discretizations[1:]:
-            if self.point_in_obs(point_on_line):
-                return prev_point
-            prev_point = point_on_line
+        joints, vertices = get_link_positions(config, self.W, self.L, self.D)
 
-        return discretizations[-1]
+        links = []
+        for obs_vertices in vertices:
+            # Adding each vertex of a link into a shapely Polygon and adding that to a list
+            links.append(shapely.Polygon([tuple(obs_vertices[0]), tuple(obs_vertices[1]), tuple(obs_vertices[2]), tuple(obs_vertices[3])]))
 
-class RandomPointGenerator:
+        for link in links:
+            for obs in self.list_of_obstacles:
+                if link.intersects(obs):
+                    return True
+
+        return False
+
+    def is_checking_required(self):
+        """ Should collision be checked for?
+        """
+        return True
+
+##############################################################################
+# Planning algorithms
+##############################################################################
+def rrt(
+    cspace,
+    qI,
+    qG,
+    edge_creator,
+    distance_computator,
+    collision_checker,
+    pG=0.1,
+    numIt=100,
+    tol=1e-3,
+):
+    """RRT with obstacles
+
+    @type cspace: a list of tuples (smin, smax) indicating that the C-space
+        is given by the product of the tuples.
+    @type qI: a tuple (x, y) indicating the initial configuration.
+    @type qG: a typle (x, y) indicating the goal configuation
+        (can be None if rrt is only used to explore the C-space).
+    @type edge_creator: an EdgeCreator object that includes the make_edge(s1, s2) function,
+        which returns an Edge object beginning at state s1 and ending at state s2.
+    @type distance_computator: a DistanceComputator object that includes the get_distance(s1, s2)
+        function, which returns the distance between s1 and s2.
+    @type collision_checker: a CollisionChecker object that includes the is_in_collision(s)
+        function, which returns whether the state s is in collision.
+    @type pG: a float indicating the probability of choosing the goal configuration.
+    @type numIt: an integer indicating the maximum number of iterations.
+    @type tol: a float, indicating the tolerance on the euclidean distance when checking whether
+        2 states are the same
+
+    @return (G, root, goal) where G is the tree, root is the id of the root vertex
+        and goal is the id of the goal vertex (if one exists in the tree; otherwise goal will be None).
     """
-    Class to generate random points
-    """
-    def __init__(self, world: World):
-        self.world = world
-
-    def __call__(self, add_goal=True):
-        choose_goal = randint(0, 100) <= 10
-
-        if choose_goal and add_goal:
-            return self.world.get_goal_state()
+    G = Tree()
+    root = G.add_vertex(np.array(qI))
+    for i in range(numIt):
+        use_goal = qG is not None and random.uniform(0, 1) <= pG
+        if use_goal:
+            alpha = np.array(qG)
         else:
-            x = round(uniform(self.world.get_x_min(), self.world.get_x_max()), 2)
-            y = round(uniform(self.world.get_y_min(), self.world.get_y_max()), 2)
-            return Point(x, y)
+            alpha = sample(cspace)
+        vn = G.get_nearest(alpha, distance_computator, tol)
+        qn = G.get_vertex_state(vn)
+        (qs, edge) = stopping_configuration(
+            qn, alpha, edge_creator, collision_checker, tol
+        )
+        if qs is None or edge is None:
+            continue
+        dist = get_euclidean_distance(qn, qs)
+        if dist > tol:
+            vs = G.add_vertex(qs)
+            G.add_edge(vn, vs, edge)
+            if use_goal and get_euclidean_distance(qs, qG) < tol:
+                return (G, root, vs)
+
+    return G, root, None
 
 
-class RRT:
-    """Main class for RRT Planning
+def prm(
+    cspace,
+    qI,
+    qG,
+    edge_creator,
+    distance_computator,
+    collision_checker,
+    k,
+    numIt=1000,
+    tol=1e-3,
+):
+    """PRM with obstacles
+
+    @type cspace: a list of tuples (smin, smax) indicating that the C-space
+        is given by the product of the tuples.
+    @type qI: a tuple (x, y) indicating the initial configuration.
+    @type qG: a typle (x, y) indicating the goal configuation
+        (can be None if prm is only used to explore the C-space).
+    @type edge_creator: an EdgeCreator object that includes the make_edge(s1, s2) function,
+        which returns an Edge object beginning at state s1 and ending at state s2.
+    @type distance_computator: a DistanceComputator object that includes the get_distance(s1, s2)
+        function, which returns the distance between s1 and s2.
+    @type collision_checker: a CollisionChecker object that includes the is_in_collision(s)
+        function, which returns whether the state s is in collision.
+    @type k: a float, indicating the number of nearest neighbors
+
+    @return (G, root, goal) where G is the roadmap, root is the id of the root vertex
+        and goal is the id of the goal vertex.
+        If the root (resp. goal) vertex does not exist in the roadmap, root (resp. goal) will be None.
     """
-    def __init__(self, world: World, obs: Obstacles, max_iter: int = 1000):
-        self.world = world
-        self.obs = obs
-        self.max_iter = max_iter
-        self.get_random_point = RandomPointGenerator(world)
 
-        self.rrt_graph = Graph(world.get_step_size())
+    def add_to_roadmap(G, alpha):
+        """Add configuration alpha to the roadmap G"""
+        if collision_checker.is_in_collision(alpha):
+            return None
+        neighbors = G.get_nearest_vertices(alpha, k, distance_computator)
+        vs = G.add_vertex(alpha)
+        for vn in neighbors:
+            if G.is_same_component(vn, vs):
+                continue
+            qn = G.get_vertex_state(vn)
+            if connect(alpha, qn, edge_creator, collision_checker, tol) and connect(
+                qn, alpha, edge_creator, collision_checker, tol
+            ):
+                G.add_edge(vs, vn, edge_creator.make_edge(alpha, qn))
+        return vs
 
-    def rrt_exploration(self):
-        """ exploration without considering obstacles. Creates the graph but does not print
+    G = GraphCC()
+    i = 0
+    while i < numIt:
+        alpha = sample(cspace)
+        if add_to_roadmap(G, alpha) is not None:
+            i = i + 1
+    root = None
+    if qI is not None:
+        root = add_to_roadmap(G, np.array(qI))
+    goal = None
+    if qG is not None:
+        goal = add_to_roadmap(G, np.array(qG))
+    return (G, root, goal)
 
-        @return: Nothing
-        """
 
-        self.rrt_graph.add_vertex(self.world.get_init_state())
-        self.rrt_graph.add_edge(Edge(self.world.get_init_state(), self.get_random_point()))
+def sample(cspace):
+    """Return a sample configuration of the C-space based on uniform random sampling"""
+    sample = [random.uniform(cspace_comp[0], cspace_comp[1]) for cspace_comp in cspace]
+    return np.array(sample)
 
-        for i in range(self.max_iter):
-            new_point = self.get_random_point()
-            # TODO make this addRandomPointToGraph() method
-            closest_edge = self.rrt_graph.get_closest_edge(new_point)
-            edge1, edge2, closest_point_on_edge = closest_edge.split_edge(new_point)
-            self.rrt_graph.rm_edge(closest_edge)
-            # TODO if one of them is null, no need to remove
-            if edge1 is not None:
-                self.rrt_graph.add_edge(edge1)
-            if edge2 is not None:
-                self.rrt_graph.add_edge(edge2)
-            self.rrt_graph.add_edge(Edge(closest_point_on_edge, new_point))
 
-    def rrt_exploration_with_collisions(self):
-        """State space exploration keeping obstacles in mind. Creates the graph but does not print
+def stopping_configuration(s1, s2, edge_creator, collision_checker, tol):
+    """Return (s, edge) where s is the point along the edge from s1 to s2 that is closest to s2 and
+    is not in collision with the obstacles and edge is the edge from s to s1"""
 
-        @return: Nothing
-        """
+    edge = edge_creator.make_edge(s1, s2)
+    if not collision_checker.is_checking_required():
+        return (s2, edge)
 
-        collision_detector = CollisionChecker(self.obs.get_obstacles(), self.world)
+    if edge.get_length() < tol:
+        return (s1, edge)
 
-        self.rrt_graph.add_vertex(self.world.get_init_state())
-        new_point = self.get_random_point()
-        ai_edge = Edge(self.world.get_init_state(), new_point)
-        new_point = collision_detector.closest_pt_on_line_outside_obs(ai_edge)
-        ai_edge = Edge(self.world.get_init_state(), new_point)
-        self.rrt_graph.add_edge(ai_edge)
+    curr_ind = 0
+    prev_state = None
+    curr_state = edge.get_discretized_state(curr_ind)
 
-        for i in range(self.max_iter):
-            new_point = self.get_random_point()
-            closest_edge = self.rrt_graph.get_closest_edge(new_point)
-            edge1, edge2, closest_point_on_edge = closest_edge.split_edge(new_point)
-            ai_edge = Edge(closest_point_on_edge, new_point)
+    while curr_state is not None:
+        if collision_checker.is_in_collision(curr_state):
+            if curr_ind == 0:
+                return (None, None)
+            elif curr_ind == 1:
+                return (s1, None)
+            split_t = (curr_ind - 1) * edge.get_step_size() / edge.get_length()
+            (edge1, _) = edge.split(split_t)
+            return (prev_state, edge1)
+        curr_ind = curr_ind + 1
+        prev_state = curr_state
+        curr_state = edge.get_discretized_state(curr_ind)
 
-            if collision_detector.edge_in_collision(ai_edge):
-                new_point = collision_detector.closest_pt_on_line_outside_obs(ai_edge)
-                ai_edge = Edge(closest_point_on_edge, new_point)
+    return (s2, edge)
 
-            self.rrt_graph.rm_edge(closest_edge)
 
-            if edge1 is not None:
-                self.rrt_graph.add_edge(edge1)
-            if edge2 is not None:
-                self.rrt_graph.add_edge(edge2)
+def connect(s1, s2, edge_creator, collision_checker, tol):
+    """Return whether an edge between s1 and s2 is collision-free"""
+    if not collision_checker.is_checking_required():
+        return True
 
-            self.rrt_graph.add_edge(ai_edge)
+    edge = edge_creator.make_edge(s1, s2)
+    if edge.get_length() < tol:
+        return True
 
-    def rrt_path_gen(self):
-        """Generate a point from the Goal_State defined in main in HW4.py
+    curr_ind = 0
+    curr_state = edge.get_discretized_state(curr_ind)
+    while curr_state is not None:
+        if collision_checker.is_in_collision(curr_state):
+            return False
+        curr_ind = curr_ind + 1
+        curr_state = edge.get_discretized_state(curr_ind)
 
-        @return:
-        """
-        collision_detector = CollisionChecker(self.obs.get_obstacles(), self.world)
-
-        self.rrt_graph.add_vertex(self.world.get_init_state())
-        new_point = self.get_random_point()
-        new_point.set_parent(self.world.get_init_state())
-
-        ai_edge = Edge(self.world.get_init_state(), new_point)
-        new_point = collision_detector.closest_pt_on_line_outside_obs(ai_edge)
-        new_point.set_parent(self.world.get_init_state())
-
-        ai_edge = Edge(self.world.get_init_state(), new_point)
-        self.rrt_graph.add_edge(ai_edge)
-
-        for i in range(self.max_iter):
-            new_point = self.get_random_point()
-            closest_edge = self.rrt_graph.get_closest_edge(new_point)
-            edge1, edge2, closest_point_on_edge = closest_edge.split_edge(new_point)
-            # TODO new addition be careful
-            new_point.set_parent(closest_point_on_edge)
-            ai_edge = Edge(closest_point_on_edge, new_point)
-
-            if collision_detector.edge_in_collision(ai_edge):
-                new_point = collision_detector.closest_pt_on_line_outside_obs(ai_edge)
-                new_point.set_parent(closest_point_on_edge)
-                ai_edge = Edge(closest_point_on_edge, new_point)
-
-            self.rrt_graph.rm_edge(closest_edge)
-
-            if edge1 is not None:
-                self.rrt_graph.add_edge(edge1)
-            if edge2 is not None:
-                self.rrt_graph.add_edge(edge2)
-
-            self.rrt_graph.add_edge(ai_edge)
-
-            if ai_edge.point2 == self.world.get_goal_state():
-                break
-            if ai_edge.point1 == self.world.get_goal_state():
-                print("ARE YOUR EDGES REVERSED?!")
-                break
-
-class PRM:
-    def __init__(self, world, obs, max_iter):
-        self.world = world
-        self.obs = obs
-        self.max_iter = max_iter
-        self.get_random_point = RandomPointGenerator(world)
-
-        self.rrt_graph = Graph(world.get_step_size())
+    return True

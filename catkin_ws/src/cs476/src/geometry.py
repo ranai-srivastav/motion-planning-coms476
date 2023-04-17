@@ -1,149 +1,41 @@
-from shapely import Polygon, LineString
-import shapely
-import numpy
-from functools import total_ordering
+import math
+import numpy as np
 
 
-class Point:
-    """Point/vertex class for Graph. Each point represents a state in the CSpace
+def get_nearest_point_on_line(s1, s2, p, tol=1e-3):
+    """Compute the nearest point on a line described by s1 and s2 to p
+
+    Note that a point on the line can be parametrized by
+        s(t) = s1 + t(s2 - s1).
+    s(t) is on the line segment between s1 and s2 iff t \in [0, 1].
+
+    The point on the line closest to p is s(t*) where
+        t* = <p-s1, s2-s1> / ||s2 - s1||^2
+
+    @return (s*, t*) where s* = s(t*)
     """
-    def __init__(self, x1: float, y1: float, parent=None) -> None:
-        self.x = x1
-        self.y = y1
-        self.parent = parent
+    ls = s2 - s1  # The line segment from s1 to s2
+    len_ls2 = np.dot(ls, ls)  # the squared length of ls
 
-    # @total_ordering
-    def __eq__(self, __value: object) -> bool:
-        return isinstance(__value, Point) and \
-            __value.x == self.x and \
-            __value.y == self.y
+    # If the line segment is too short, just return 0
+    if len_ls2 < tol:
+        return (s1, 0)
 
-    def __hash__(self):
-        return hash(f"{self.x} {self.y}")
+    tstar = np.dot(p - s1, ls) / len_ls2
+    if tstar <= tol:
+        return (s1, 0)
+    if tstar >= 1 - tol:
+        return (s2, 1)
 
-    # @total_ordering
-    # def __lt__(self, __value: object) -> bool:
-    #     if not isinstance(__value, Point):
-    #         return False
-    #     else:
-    #         if __value.x < self.x and __value.y < self.y:
-    #             return False
-
-    #     return True
-
-    def __str__(self) -> str:
-        return f"x:{self.x} y:{self.y}"
-
-    def set_parent(self, parent):
-        self.parent = parent
+    return (s1 + tstar * ls, tstar)
 
 
-class Edge:
-    """Edge class for the Graph. Represents the transition from one state in CSpace to another
+def get_euclidean_distance(s1, s2):
+    """Compute the norm ||s2 - s1||"""
+    ls = s2 - s1
+    return math.sqrt(np.dot(ls, ls))
 
-    """
-    def __init__(self, point1: Point, point2: Point) -> None:
-        self.point1 = point1
-        self.point2 = point2
 
-    def __eq__(self, __value: object) -> bool:
-        return isinstance(__value, Edge) and \
-            (
-                    (__value.point1 == self.point1 and __value.point2 == self.point2) or
-                    (__value.point1 == self.point2 and __value.point2 == self.point1)
-            )
-
-    def __str__(self):
-        return f"{self.point1} ---> {self.point2}"
-
-    def get_euclidean_distance(self):
-        return (self.point1.x - self.point2.x) ** 2 + (self.point1.y - self.point2.y) ** 2
-
-    @staticmethod
-    def get_two_point_euclidean_distance(point1: Point, point2: Point) -> float:
-        """ A static method that returns the Euclidean distance between two given points
-
-        @param point1:
-        @param point2:
-        @return: The eucliden distance L2 Norm between two points
-        """
-        return (point1.x - point2.x) ** 2. + (point1.y - point2.y) ** 2.
-
-    def get_nearest_point(self, p: Point):
-        """ Projects a line onto this vector and gets the point closest to the given point on this edge
-
-        @param p:
-        @return:
-        """
-        numpy.seterr(invalid='ignore')
-        vp_1 = numpy.array([p.x - self.point1.x, p.y - self.point1.y])
-        v2_1 = numpy.array([self.point2.x - self.point1.x, self.point2.y - self.point1.y])
-
-        t_dash = (vp_1 @ v2_1) / self.get_euclidean_distance()
-        t_dash = max(0, min(t_dash, 1))
-
-        if t_dash == 0:
-            return self.point1
-        elif t_dash == 1:
-            self.point2.set_parent(self.point1)
-            return self.point2
-        else:
-            scale = t_dash * v2_1
-            return Point(self.point1.x + scale[0], self.point1.y + scale[1], parent=self.point1)
-
-    def reverse(self):
-        return Edge(self.point2, self.point1)
-
-    def is_inside_obstacle(self, obstacle: Polygon):
-        obstacle.contains(obstacle)
-
-    def get_discritized_edge(self, step_size):
-        """Uses shapely to return a discretization of the edge
-
-        @param step_size:
-        @return:
-        """
-        point1 = shapely.Point(self.point1.x, self.point1.y)
-        point2 = shapely.Point(self.point2.x, self.point2.y)
-        line = LineString([point1, point2])
-        length = line.length
-        num_segments = int(length / step_size) + 1
-
-        list_of_points = [line.interpolate(i * step_size) for i in range(num_segments)]
-
-        return [Point(point.x, point.y) for point in list_of_points]
-
-    # @staticmethod
-    # def split_edge(edge:'Edge', point:Point):
-
-    #     closet_point_on_edge = edge.get_nearest_point(point)
-
-    #     edge1 = Edge(edge.point1, closet_point_on_edge)
-    #     edge2 = Edge(closet_point_on_edge, edge.point2)
-
-    #     return (edge1, edge2)
-
-    def split_edge(self, point: Point):
-        """Splits an edge into two and returns the two edges and the split point. This method calls get nearest point
-
-        @param point: The point ( It can be completely separate from the line) that determines how to split
-        @return:
-        """
-
-        closet_point_on_edge = self.get_nearest_point(point)
-        # TODO Can create circular dependency
-        if closet_point_on_edge != self.point1:
-            closet_point_on_edge.set_parent(self.point1)
-        if closet_point_on_edge != self.point2:
-            self.point2.set_parent(closet_point_on_edge)
-
-        edge1 = Edge(self.point1, closet_point_on_edge)
-        edge2 = Edge(closet_point_on_edge, self.point2)
-
-        if closet_point_on_edge == self.point1:
-            return None, edge2, closet_point_on_edge
-
-        if closet_point_on_edge == self.point2:
-            return edge1, None, closet_point_on_edge
-
-        return edge1, edge2, closet_point_on_edge
+def is_inside_circle(c, r, p):
+    """Return whether point p is inside a circle with radius r, centered at c"""
+    return (p[0] - c[0]) ** 2 + (p[1] - c[1]) ** 2 <= r ** 2
