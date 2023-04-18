@@ -1,0 +1,8 @@
+prefix=/root/motion-planning-coms476/catkin_ws/devel
+
+Name: cs476
+Description: Description of cs476
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 
