@@ -1,7 +1,5 @@
 import math
 from geometry import is_inside_circle
-import shapely
-from link_utils import get_link_positions
 
 
 class Obstacle:
@@ -50,7 +48,7 @@ class WorldBoundary2D(Obstacle):
         "in collision" with an obstacle.).
         """
         return (
-                s[0] < self.xmin or s[0] > self.xmax or s[1] < self.ymin or s[1] > self.ymax
+            s[0] < self.xmin or s[0] > self.xmax or s[1] < self.ymin or s[1] > self.ymax
         )
 
 
@@ -62,26 +60,3 @@ def construct_circular_obstacles(dt):
     for i in range(len(c)):
         obstacles.append(CircularObstacle(c[i], r, t[i]))
     return obstacles
-
-
-class LinkObstacle(Obstacle):
-    def __init__(self, O, W, L, D):
-        self.list_of_vertices = O
-        self.shapely_poly = shapely.Polygon(self.list_of_vertices)
-        self.W = W
-        self.L = L
-        self.D = D
-
-    def contain(self, config):
-        """ Is point p contained inside any obstacle?
-
-        @param p:
-        @return:
-        """
-        _, link_vertices = get_link_positions(config, self.W, self.L, self.D)
-
-        for link_vertex in link_vertices:
-            if self.shapely_poly.intersects(shapely.Polygon(link_vertex)):
-                return True
-
-        return False

@@ -1,11 +1,8 @@
 import random
 import numpy as np
-import shapely
-
 from graph import Tree, GraphCC
 from edge import EdgeStraight
 from geometry import get_euclidean_distance
-from link_utils import get_link_positions
 
 
 ##############################################################################
@@ -85,41 +82,6 @@ class ObstacleCollisionChecker(CollisionChecker):
         return True
 
 
-class LinkCollisionChecker(CollisionChecker):
-    """
-
-    """
-    def __init__(self, W, L, D, obstacles):
-        self.W = W
-        self.L = L
-        self.D = D
-        self.list_of_obstacles = obstacles
-
-    def is_in_collision(self, config: list):
-        """
-        @param config: A list with n elements, each element is the angle formed between a link A[i] and the previous link A[i-1]
-        @return:
-        """
-
-        joints, vertices = get_link_positions(config, self.W, self.L, self.D)
-
-        links = []
-        for obs_vertices in vertices:
-            # Adding each vertex of a link into a shapely Polygon and adding that to a list
-            links.append(shapely.Polygon([tuple(obs_vertices[0]), tuple(obs_vertices[1]), tuple(obs_vertices[2]), tuple(obs_vertices[3])]))
-
-        for link in links:
-            for obs in self.list_of_obstacles:
-                if link.intersects(obs):
-                    return True
-
-        return False
-
-    def is_checking_required(self):
-        """ Should collision be checked for?
-        """
-        return True
-
 ##############################################################################
 # Planning algorithms
 ##############################################################################
@@ -177,7 +139,7 @@ def rrt(
             if use_goal and get_euclidean_distance(qs, qG) < tol:
                 return (G, root, vs)
 
-    return G, root, None
+    return (G, root, None)
 
 
 def prm(

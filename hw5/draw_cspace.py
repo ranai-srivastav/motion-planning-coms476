@@ -17,7 +17,6 @@ def draw(ax, cspace, obstacles, qI, qG, G, path, title=""):
     """
 
     draw_cspace(ax, cspace, obstacles)
-
     drawG = getattr(G, "draw", None)
     if callable(drawG):
         G.draw(ax)
