@@ -1,5 +1,6 @@
 import math
 from geometry import get_euclidean_distance, get_nearest_point_on_line
+import dubins
 
 
 class Edge:
@@ -137,4 +138,4 @@ class DubinsEdge(Edge):
         #TODO length
         self.length = -1
         #TODO dubins_edge
-        self.edge = dubins.
+        self.edge = dubins.get_path()
