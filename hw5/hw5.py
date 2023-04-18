@@ -4,7 +4,7 @@ import numpy
 from planning import (
     rrt,
     prm,
-    StraightEdgeCreator,
+    DubinsEdgeCreator,
     EuclideanDistanceComputator,
     EmptyCollisionChecker,
     ObstacleCollisionChecker,
@@ -105,9 +105,9 @@ def main_prm(
 
 if __name__ == "__main__":
     #TODO add variable to change dt
-    cspace = [(-3, 3), (-1, 1), (-(numpy.pi/2.), numpy.pi/2.)]
-    qI = (-2, -0.5)
-    qG = (2, -0.5)
+    cspace = [(-3, 3), (-1, 1), (0, 2 * numpy.pi)]
+    qI = (-2, -0.5, 0)
+    qG = (2, -0.5, numpy.pi/2)
     obstacles = construct_circular_obstacles(0.02)
     obs_boundaries = [obstacle.get_boundaries() for obstacle in obstacles]
 
@@ -119,7 +119,7 @@ if __name__ == "__main__":
     world_boundary = WorldBoundary2D(cspace[0], cspace[1])
     obstacles.append(world_boundary)
 
-    edge_creator = StraightEdgeCreator(0.1)
+    edge_creator = DubinsEdgeCreator(0.1, 0.5)
     collision_checker = ObstacleCollisionChecker(obstacles)
     distance_computator = EuclideanDistanceComputator()
 

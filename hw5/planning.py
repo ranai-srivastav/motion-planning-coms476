@@ -1,7 +1,7 @@
 import random
 import numpy as np
 from graph import Tree, GraphCC
-from edge import EdgeStraight
+from edge import DubinsEdge
 from geometry import get_euclidean_distance
 
 
@@ -19,7 +19,16 @@ class StraightEdgeCreator(EdgeCreator):
         self.step_size = step_size
 
     def make_edge(self, s1, s2):
-        return EdgeStraight(s1, s2, self.step_size)
+        raise NotImplementedError
+        # return EdgeStraight(s1, s2, self.step_size)
+    
+class DubinsEdgeCreator(EdgeCreator):
+    def __init__(self, step_size, rho) -> None:
+        self.step_size = step_size
+        self.rho = rho
+    
+    def make_edge(self, s1, s2):
+        DubinsEdge(s1, s2, rho, self.step_size)
 
 
 ##############################################################################

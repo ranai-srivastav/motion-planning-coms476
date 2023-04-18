@@ -131,11 +131,10 @@ class EdgeStraight(Edge):
         return self.length
     
 class DubinsEdge(Edge):
-    def __init__(self, s1, s2, step_size=0.1):
-        super().__init__(s1, s2, step_size)
+    def __init__(self, s1, s2, rho:float, step_size=0.1):
         self.start_state = s1
         self.end_state = s2
         #TODO length
-        self.length = -1
         #TODO dubins_edge
-        self.edge = dubins.get_path()
+        self.edge = dubins.dubins_shortest_path(s1, s2)
+        self.length = dubins.dubins_path_length(self.edge)
