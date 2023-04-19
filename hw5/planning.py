@@ -1,7 +1,7 @@
 import random
 import numpy as np
 from graph import Tree, GraphCC
-from edge import DubinsEdge
+from edge import DubinsEdge, EdgeStraight
 from geometry import get_euclidean_distance
 import dubins
 
@@ -20,8 +20,8 @@ class StraightEdgeCreator(EdgeCreator):
         self.step_size = step_size
 
     def make_edge(self, s1, s2):
-        raise NotImplementedError
-        # return EdgeStraight(s1, s2, self.step_size)
+        # raise NotImplementedError
+        return EdgeStraight(s1, s2, self.step_size)
     
 class DubinsEdgeCreator(EdgeCreator):
     def __init__(self, step_size, rho) -> None:
@@ -55,7 +55,7 @@ class DubinsDistanceComputator(DistanceComputator):
         self.rho = rho
         
     def get_distance(self, s1, s2):
-        return DubinsEdge(s1, s2, self.rho, 0).get_distance()
+        return dubins.shortest_path(s1, s2, self.rho).path_length()
 
 
 ##############################################################################
@@ -153,11 +153,11 @@ def rrt(
         )
         if qs is None or edge is None:
             continue
-        dist = get_euclidean_distance(qn, qs)
+        dist = distance_computator.get_distance(qn, qs)
         if dist > tol:
             vs = G.add_vertex(qs)
             G.add_edge(vn, vs, edge)
-            if use_goal and get_euclidean_distance(qs, qG) < tol:
+            if use_goal and distance_computator.get_distance(qs, qG) < tol:
                 return (G, root, vs)
 
     return (G, root, None)

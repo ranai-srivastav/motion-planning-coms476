@@ -4,7 +4,9 @@ import numpy
 from planning import (
     rrt,
     prm,
+    StraightEdgeCreator,
     DubinsEdgeCreator,
+    DubinsDistanceComputator,
     EuclideanDistanceComputator,
     EmptyCollisionChecker,
     ObstacleCollisionChecker,
@@ -105,10 +107,19 @@ def main_prm(
 
 if __name__ == "__main__":
     #TODO add variable to change dt
+    
+    ####################### HW 4 ##########################
+    # cspace = [(-3, 3), (-1, 1)]
+    # qI = (-2, -0.5)
+    # qG = (2, -0.5)
+    
+    ####################### HW 5 #########################
     cspace = [(-3, 3), (-1, 1), (0, 2 * numpy.pi)]
     qI = (-2, -0.5, 0)
     qG = (2, -0.5, numpy.pi/2)
-    obstacles = construct_circular_obstacles(0.02)
+    rho = 0.5
+    step_size = 0.1
+    obstacles = construct_circular_obstacles(0.2)
     obs_boundaries = [obstacle.get_boundaries() for obstacle in obstacles]
 
     # We don't really need to explicitly need to check the world boundary
@@ -119,9 +130,10 @@ if __name__ == "__main__":
     world_boundary = WorldBoundary2D(cspace[0], cspace[1])
     obstacles.append(world_boundary)
 
-    edge_creator = DubinsEdgeCreator(0.1, 0.5)
+    edge_creator = DubinsEdgeCreator(step_size, rho)
+    # edge_creator = StraightEdgeCreator(0.1)
     collision_checker = ObstacleCollisionChecker(obstacles)
-    distance_computator = EuclideanDistanceComputator()
+    distance_computator = DubinsDistanceComputator(rho)
 
     args = parse_args()
 

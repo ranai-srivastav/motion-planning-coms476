@@ -137,12 +137,21 @@ class DubinsEdge(Edge):
         self.rho = rho
         self.step_size = step_size
         self.discretization = discretizations
+        self.num_discretized_states = len(discretizations)
         self.distances = distances
         self.length = length
     
 
     def get_discretized_state(self, i):
-        return self.discretization[i]
+        """Return the i^{th} discretized state"""
+        if i == 0:
+            return self.s1
+        if i == self.num_discretized_states - 1:
+            return self.s2
+        if i >= self.num_discretized_states:
+            return None
+        
+        return self.discretization[i-1]
     
 
     def get_length(self):
@@ -161,7 +170,7 @@ class DubinsEdge(Edge):
                 nearest_distance = dist
                 nearest_pt = state
                 
-        return nearest_pt
+        return nearest_pt, nearest_distance
     
     
     def split(self, t):
@@ -169,8 +178,13 @@ class DubinsEdge(Edge):
 
         @return (edge1, edge2) edge1 and edge2 are the result of splitting the original edge
         """
+        # print(f"DubinsEdge.split    t={t} length={self.length}")
         proportion_of_curve = t/self.length  # This number should always be less than 1
-        split_index = int(proportion_of_curve * len(self.discretization))
+        # split_index = int(proportion_of_curve * len(self.discretization))
+        split_index = int(t * len(self.discretization))
+        
+        if split_index >= self.num_discretized_states:
+            raise ValueError(f"DubinsEdge.split    Split index {split_index} out of range for discretization list of len {self.num_discretized_states}")
         
         edge1_discretization = self.discretization[:split_index+1]
         edge2_discretization = self.discretization[split_index:]
@@ -188,6 +202,7 @@ class DubinsEdge(Edge):
     
     def reverse(self):
         """Reverse the origin/destination of the edge"""
+        raise NotImplementedError
         #TODO
         # path = DubinsEdge(self.s2, self.s1, self.length, self.discretization[::-1], self. ,self.rho, self.step_size)
-        return path
+        # return path
