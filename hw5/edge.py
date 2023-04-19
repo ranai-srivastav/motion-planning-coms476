@@ -131,10 +131,63 @@ class EdgeStraight(Edge):
         return self.length
     
 class DubinsEdge(Edge):
-    def __init__(self, s1, s2, rho:float, step_size=0.1):
-        self.start_state = s1
-        self.end_state = s2
-        #TODO length
-        #TODO dubins_edge
-        self.edge = dubins.dubins_shortest_path(s1, s2)
-        self.length = dubins.dubins_path_length(self.edge)
+    def __init__(self, s1, s2, length:float, discretizations, distances, rho:float = 0.5, step_size=0.1):
+        self.s1 = s1
+        self.s2 = s2
+        self.rho = rho
+        self.step_size = step_size
+        self.discretization = discretizations
+        self.distances = distances
+        self.length = length
+    
+
+    def get_discretized_state(self, i):
+        return self.discretization[i]
+    
+
+    def get_length(self):
+        return self.length
+    
+
+    def get_nearest_point(self, state):
+        
+        nearest_pt = self.s1
+        nearest_distance = dubins.shortest_path(self.s1, state, self.rho).path_length()
+        
+        for states_on_line in self.discretization:
+            path = dubins.shortest_path(states_on_line, state, self.rho)
+            dist = path.path_length()
+            if path.path_length() < nearest_distance:
+                nearest_distance = dist
+                nearest_pt = state
+                
+        return nearest_pt
+    
+    
+    def split(self, t):
+        """Split the edge at distance t/length where length is the length of this edge
+
+        @return (edge1, edge2) edge1 and edge2 are the result of splitting the original edge
+        """
+        proportion_of_curve = t/self.length  # This number should always be less than 1
+        split_index = int(proportion_of_curve * len(self.discretization))
+        
+        edge1_discretization = self.discretization[:split_index+1]
+        edge2_discretization = self.discretization[split_index:]
+        
+        edge1_distances = self.distances[:split_index+1]
+        edge2_distances = self.distances[split_index:]
+        
+        edge1_len = self.distances[split_index] - self.distances[0]
+        edge2_len = self.distances[len(self.distances) - 1] - self.distances[split_index]
+        
+        e1 = DubinsEdge(self.s1, self.discretization[split_index], edge1_len, edge1_discretization, edge1_distances, self.rho, self.step_size)
+        e2 = DubinsEdge(self.discretization[split_index], self.s2, edge2_len, edge2_discretization, edge2_distances, self.rho, self.step_size)
+        
+        return e1, e2
+    
+    def reverse(self):
+        """Reverse the origin/destination of the edge"""
+        #TODO
+        # path = DubinsEdge(self.s2, self.s1, self.length, self.discretization[::-1], self. ,self.rho, self.step_size)
+        return path

@@ -3,6 +3,7 @@ import numpy as np
 from graph import Tree, GraphCC
 from edge import DubinsEdge
 from geometry import get_euclidean_distance
+import dubins
 
 
 ##############################################################################
@@ -28,7 +29,11 @@ class DubinsEdgeCreator(EdgeCreator):
         self.rho = rho
     
     def make_edge(self, s1, s2):
-        DubinsEdge(s1, s2, rho, self.step_size)
+        dubins_edge = dubins.shortest_path(s1, s2, self.rho)
+        discretizations, distances = dubins_edge.sample_many(self.step_size)
+        length = dubins_edge.path_length()
+        return DubinsEdge(s1, s2, length, discretizations, distances, self.rho, self.step_size)
+        
 
 
 ##############################################################################
@@ -44,6 +49,13 @@ class EuclideanDistanceComputator(DistanceComputator):
     def get_distance(self, s1, s2):
         """Return the Euclidean distance between s1 and s2"""
         return get_euclidean_distance(s1, s2)
+    
+class DubinsDistanceComputator(DistanceComputator):
+    def __init__(self, rho) -> None:
+        self.rho = rho
+        
+    def get_distance(self, s1, s2):
+        return DubinsEdge(s1, s2, self.rho, 0).get_distance()
 
 
 ##############################################################################
