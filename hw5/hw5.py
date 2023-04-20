@@ -19,11 +19,12 @@ ALG_PRM = "prm"
 
 
 def append_to_path(path, rrt_graph, goal):
-    return_path = []
+    
+    return_path = [rrt_graph.vertices[goal]]
     
     while goal > 0:
         previous = rrt_graph.parents[goal][0]
-        print(f"({previous}, {goal})")
+        # print(f"({previous}, {goal})")
         _, edge = rrt_graph.edges[(previous, goal)]
         list_of_discretizations = edge.discretization
         
@@ -133,10 +134,10 @@ if __name__ == "__main__":
     ####################### HW 5 #########################
     cspace = [(-3, 3), (-1, 1), (0, 2 * numpy.pi)]
     qI = (-2, -0.5, 0)
-    qG = (2, -0.5, numpy.pi/2)
+    qG = (2, 0.9, numpy.pi/2)
     rho = 0.5
     step_size = 0.1
-    obstacles = construct_circular_obstacles(0.9)
+    obstacles = construct_circular_obstacles(0.2)
     obs_boundaries = [obstacle.get_boundaries() for obstacle in obstacles]
 
     # We don't really need to explicitly need to check the world boundary

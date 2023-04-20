@@ -141,7 +141,7 @@ def rrt(
     G = Tree()
     root = G.add_vertex(np.array(qI))
     for i in range(numIt):
-        print(i)
+        # print(i)
         use_goal = qG is not None and random.uniform(0, 1) <= pG
         if use_goal:
             alpha = np.array(qG)
@@ -251,11 +251,8 @@ def stopping_configuration(s1, s2, edge_creator, collision_checker, tol):
     while curr_state is not None:
         if collision_checker.is_in_collision(curr_state):
             if curr_ind == 0:
-                print("s1 is in collision")
                 return (None, None)
             elif curr_ind == 1:
-                print("s1 is not in collision but the next point is")
-                print(curr_state)
                 return (s1, None)
             split_t = (curr_ind - 1) * edge.get_step_size() / edge.get_length()
             (edge1, _) = edge.split(split_t)

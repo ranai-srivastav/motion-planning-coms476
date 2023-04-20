@@ -178,7 +178,7 @@ class DubinsEdge(Edge):
                 # else:
                 #     print("Invalid Path when calculating nearest point")
                     
-        print(f"{i}/{len(self.discretization)}")
+        # print(f"{i}/{len(self.discretization)}")
                 
         return nearest_pt, nearest_distance
     
