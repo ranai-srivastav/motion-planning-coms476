@@ -114,7 +114,7 @@ def rrt(
     distance_computator,
     collision_checker,
     pG=0.1,
-    numIt=100,
+    numIt=1000,
     tol=1e-3,
 ):
     """RRT with obstacles

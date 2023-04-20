@@ -18,6 +18,20 @@ ALG_RRT = "rrt"
 ALG_PRM = "prm"
 
 
+def append_to_path(path, rrt_graph, goal):
+    return_path = []
+    
+    while goal > 0:
+        previous = rrt_graph.parents[goal][0]
+        print(f"({previous}, {goal})")
+        _, edge = rrt_graph.edges[(previous, goal)]
+        list_of_discretizations = edge.discretization
+        
+        return_path = list_of_discretizations + return_path
+        goal = rrt_graph.parents[goal][0] if isinstance(rrt_graph.parents[goal], list) else rrt_graph.parents[goal]
+
+    return return_path
+        
 def parse_args():
     """Parse command line arguments"""
     parser = argparse.ArgumentParser(
@@ -78,6 +92,9 @@ def main_rrt(
     path = []
     if goal3 is not None:
         path = G3.get_path(root3, goal3)
+        # print(path)
+        path = append_to_path(path, G3, goal3)
+        # print(path)
     draw(ax3, cspace, obs_boundaries, qI, qG, G3, path, title3)
 
     plt.show()
@@ -119,7 +136,7 @@ if __name__ == "__main__":
     qG = (2, -0.5, numpy.pi/2)
     rho = 0.5
     step_size = 0.1
-    obstacles = construct_circular_obstacles(0.2)
+    obstacles = construct_circular_obstacles(0.9)
     obs_boundaries = [obstacle.get_boundaries() for obstacle in obstacles]
 
     # We don't really need to explicitly need to check the world boundary

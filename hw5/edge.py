@@ -162,7 +162,8 @@ class DubinsEdge(Edge):
     def get_nearest_point(self, state):
         
         nearest_pt = self.s1
-        nearest_distance = dubins.shortest_path(self.s1, state, self.rho).path_length()
+        # nearest_distance = dubins.shortest_path(self.s1, state, self.rho).path_length()
+        nearest_distance = float('inf')
         
         i = 0
         for states_on_line in self.discretization:
@@ -170,12 +171,13 @@ class DubinsEdge(Edge):
             path = dubins.shortest_path(states_on_line, state, self.rho)
             if path is not None:
                 dist = path.path_length()
-                if path.path_length() < nearest_distance:
+                if dist < nearest_distance:
                     nearest_distance = dist
-                    nearest_pt = state
+                    nearest_pt = states_on_line
                     i += 1
-                else:
-                    print("Invalid Path when calculating nearest point")
+                # else:
+                #     print("Invalid Path when calculating nearest point")
+                    
         print(f"{i}/{len(self.discretization)}")
                 
         return nearest_pt, nearest_distance
@@ -187,7 +189,7 @@ class DubinsEdge(Edge):
         @return (edge1, edge2) edge1 and edge2 are the result of splitting the original edge
         """
         # print(f"DubinsEdge.split    t={t} length={self.length}")
-        proportion_of_curve = t/self.length  # This number should always be less than 1
+        # proportion_of_curve = t/self.length  # This number should always be less than 1
         # split_index = int(proportion_of_curve * len(self.discretization))
         split_index = int(t * len(self.discretization))
         
