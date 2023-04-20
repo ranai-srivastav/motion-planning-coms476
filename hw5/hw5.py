@@ -89,6 +89,7 @@ def main_rrt(
         edge_creator=edge_creator,
         distance_computator=distance_computator,
         collision_checker=collision_checker,
+        numIt=100
     )
     path = []
     if goal3 is not None:
@@ -134,7 +135,7 @@ if __name__ == "__main__":
     ####################### HW 5 #########################
     cspace = [(-3, 3), (-1, 1), (0, 2 * numpy.pi)]
     qI = (-2, -0.5, 0)
-    qG = (2, 0.9, numpy.pi/2)
+    qG = (2, -0.5, numpy.pi)
     rho = 0.5
     step_size = 0.1
     obstacles = construct_circular_obstacles(0.2)

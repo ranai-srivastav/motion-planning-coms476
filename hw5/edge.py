@@ -151,7 +151,6 @@ class DubinsEdge(Edge):
         if i >= self.num_discretized_states:
             return None
         
-        #TODO: Should this be i or i - 1?
         return self.discretization[i]
     
 
@@ -191,6 +190,7 @@ class DubinsEdge(Edge):
         # print(f"DubinsEdge.split    t={t} length={self.length}")
         # proportion_of_curve = t/self.length  # This number should always be less than 1
         # split_index = int(proportion_of_curve * len(self.discretization))
+        
         split_index = int(t * len(self.discretization))
         
         if split_index >= self.num_discretized_states:
