@@ -39,31 +39,31 @@ def main_rrt(
     cspace, qI, qG, edge_creator, distance_computator, collision_checker, obs_boundaries
 ):
     """Task 1 (Exploring the C-space using RRT) and Task 2 (Solve the planning problem using RRT)"""
-    fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
+    fig, ax3 = plt.subplots(1)
 
-    # Task 1a: Neglect obstacles and goal
-    title1 = "RRT exploration, neglecting obstacles"
-    (G1, _, _) = rrt(
-        cspace=cspace,
-        qI=qI,
-        qG=None,
-        edge_creator=edge_creator,
-        distance_computator=distance_computator,
-        collision_checker=EmptyCollisionChecker(),
-    )
-    draw(ax1, cspace, obs_boundaries, qI, qG, G1, [], title1)
+    # # Task 1a: Neglect obstacles and goal
+    # title1 = "RRT exploration, neglecting obstacles"
+    # (G1, _, _) = rrt(
+    #     cspace=cspace,
+    #     qI=qI,
+    #     qG=None,
+    #     edge_creator=edge_creator,
+    #     distance_computator=distance_computator,
+    #     collision_checker=EmptyCollisionChecker(),
+    # )
+    # draw(ax1, cspace, obs_boundaries, qI, qG, G1, [], title1)
 
-    # Task 1b: Include obstacles, neglect goal
-    title2 = "RRT exploration, considering obstacles"
-    (G2, _, _) = rrt(
-        cspace=cspace,
-        qI=qI,
-        qG=None,
-        edge_creator=edge_creator,
-        distance_computator=distance_computator,
-        collision_checker=collision_checker,
-    )
-    draw(ax2, cspace, obs_boundaries, qI, qG, G2, [], title2)
+    # # Task 1b: Include obstacles, neglect goal
+    # title2 = "RRT exploration, considering obstacles"
+    # (G2, _, _) = rrt(
+    #     cspace=cspace,
+    #     qI=qI,
+    #     qG=None,
+    #     edge_creator=edge_creator,
+    #     distance_computator=distance_computator,
+    #     collision_checker=collision_checker,
+    # )
+    # draw(ax2, cspace, obs_boundaries, qI, qG, G2, [], title2)
 
     # Task 2: Include obstacles and goal
     title3 = "RRT planning"

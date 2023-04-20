@@ -151,7 +151,8 @@ class DubinsEdge(Edge):
         if i >= self.num_discretized_states:
             return None
         
-        return self.discretization[i-1]
+        #TODO: Should this be i or i - 1?
+        return self.discretization[i]
     
 
     def get_length(self):
@@ -163,12 +164,19 @@ class DubinsEdge(Edge):
         nearest_pt = self.s1
         nearest_distance = dubins.shortest_path(self.s1, state, self.rho).path_length()
         
+        i = 0
         for states_on_line in self.discretization:
+            
             path = dubins.shortest_path(states_on_line, state, self.rho)
-            dist = path.path_length()
-            if path.path_length() < nearest_distance:
-                nearest_distance = dist
-                nearest_pt = state
+            if path is not None:
+                dist = path.path_length()
+                if path.path_length() < nearest_distance:
+                    nearest_distance = dist
+                    nearest_pt = state
+                    i += 1
+                else:
+                    print("Invalid Path when calculating nearest point")
+        print(f"{i}/{len(self.discretization)}")
                 
         return nearest_pt, nearest_distance
     
