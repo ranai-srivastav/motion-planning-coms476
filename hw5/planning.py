@@ -30,9 +30,17 @@ class DubinsEdgeCreator(EdgeCreator):
     
     def make_edge(self, s1, s2):
         dubins_edge = dubins.shortest_path(s1, s2, self.rho)
-        discretizations, distances = dubins_edge.sample_many(self.step_size)
         length = dubins_edge.path_length()
+        tstep = min(1, self.step_size/length)
+        discretizations, distances = dubins_edge.sample_many(self.step_size)
+        discretizations.append(s2)
+        distances.append(length)
         return DubinsEdge(s1, s2, length, discretizations, distances, self.rho, self.step_size)
+        
+        # dubins_edge = dubins.shortest_path(s1, s2, self.rho)
+        # discretizations, distances = dubins_edge.sample_many(self.step_size)
+        # length = dubins_edge.path_length()
+        # return DubinsEdge(s1, s2, length, discretizations, distances, self.rho, self.step_size)
         
 
 
@@ -143,7 +151,7 @@ def rrt(
     for i in range(numIt):
         # print(i)
         use_goal = qG is not None and random.uniform(0, 1) <= pG
-        if use_goal:
+        if use_goal or i == numIt-1:
             alpha = np.array(qG)
         else:
             alpha = sample(cspace)
@@ -255,6 +263,7 @@ def stopping_configuration(s1, s2, edge_creator, collision_checker, tol):
             elif curr_ind == 1:
                 return (s1, None)
             split_t = (curr_ind - 1) * edge.get_step_size() / edge.get_length()
+            # split_t = (curr_ind - 1) / len(edge.discretization)
             (edge1, _) = edge.split(split_t)
             return (prev_state, edge1)
         curr_ind = curr_ind + 1

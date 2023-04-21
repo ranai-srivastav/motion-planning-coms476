@@ -158,24 +158,25 @@ class DubinsEdge(Edge):
         return self.length
     
 
-    def get_nearest_point(self, state):
+    def get_nearest_point(self, state, ax=None):
         
         nearest_pt = self.s1
         # nearest_distance = dubins.shortest_path(self.s1, state, self.rho).path_length()
         nearest_distance = float('inf')
         
-        i = 0
+        i = 0     
         for states_on_line in self.discretization:
-            
             path = dubins.shortest_path(states_on_line, state, self.rho)
             if path is not None:
                 dist = path.path_length()
                 if dist < nearest_distance:
                     nearest_distance = dist
                     nearest_pt = states_on_line
-                    i += 1
-                # else:
-                #     print("Invalid Path when calculating nearest point")
+                if ax is not None:
+                    st, dist = path.sample_many(self.step_size)  
+                    ax.plot([s[0] for s in st], [s[1] for s in st], "g.")
+            else:
+                print("Invalid Path when calculating nearest point")
                     
         # print(f"{i}/{len(self.discretization)}")
                 
