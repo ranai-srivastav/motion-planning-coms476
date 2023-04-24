@@ -89,7 +89,7 @@ def main_rrt(
         edge_creator=edge_creator,
         distance_computator=distance_computator,
         collision_checker=collision_checker,
-        numIt=1000
+        numIt=5
     )
     path = []
     if goal3 is not None:
@@ -97,6 +97,7 @@ def main_rrt(
         # print(path)
         path = append_to_path(path, G3, goal3)
         # print(path)
+    print(f"len of edges {len(G3.edges)}")
     draw(ax3, cspace, obs_boundaries, qI, qG, G3, path, title3)
 
     plt.show()
@@ -149,9 +150,9 @@ if __name__ == "__main__":
     world_boundary = WorldBoundary2D(cspace[0], cspace[1])
     obstacles.append(world_boundary)
 
-    edge_creator = DubinsEdgeCreator(step_size, rho)
     # edge_creator = StraightEdgeCreator(0.1)
     collision_checker = ObstacleCollisionChecker(obstacles)
+    edge_creator = DubinsEdgeCreator(collision_checker, step_size, rho)
     distance_computator = DubinsDistanceComputator(rho)
 
     args = parse_args()

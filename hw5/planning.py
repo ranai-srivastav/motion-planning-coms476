@@ -24,18 +24,25 @@ class StraightEdgeCreator(EdgeCreator):
         return EdgeStraight(s1, s2, self.step_size)
     
 class DubinsEdgeCreator(EdgeCreator):
-    def __init__(self, step_size, rho) -> None:
+    def __init__(self, collision_checker, step_size, rho) -> None:
         self.step_size = step_size
         self.rho = rho
+        self.collision_checker = collision_checker
     
     def make_edge(self, s1, s2):
+        if s1[0] == s2[0] and s1[1] == s2[1]:
+            print("[--ERR--]You're making no edge")
+            
         dubins_edge = dubins.shortest_path(s1, s2, self.rho)
         length = dubins_edge.path_length()
-        tstep = min(1, self.step_size/length)
-        discretizations, distances = dubins_edge.sample_many(self.step_size)
+        if length > 0:
+            tstep = min(1, self.step_size/length)
+        else:
+            tstep = 0.01
+        discretizations, distances = dubins_edge.sample_many(tstep)
         discretizations.append(s2)
         distances.append(length)
-        return DubinsEdge(s1, s2, length, discretizations, distances, self.rho, self.step_size)
+        return DubinsEdge(s1, s2, length, discretizations, distances, self.collision_checker, self.rho, self.step_size)
         
         # dubins_edge = dubins.shortest_path(s1, s2, self.rho)
         # discretizations, distances = dubins_edge.sample_many(self.step_size)
@@ -122,7 +129,7 @@ def rrt(
     distance_computator,
     collision_checker,
     pG=0.1,
-    numIt=100,
+    numIt=500,
     tol=1e-3,
 ):
     """RRT with obstacles
@@ -146,12 +153,13 @@ def rrt(
     @return (G, root, goal) where G is the tree, root is the id of the root vertex
         and goal is the id of the goal vertex (if one exists in the tree; otherwise goal will be None).
     """
+    
+    si = 0
     G = Tree()
     root = G.add_vertex(np.array(qI))
     for i in range(numIt):
-        # print(i)
-        use_goal = qG is not None and random.uniform(0, 1) <= pG
-        if use_goal or i == numIt-1:
+        use_goal = (qG is not None and random.uniform(0, 1) <= pG) or i > numIt - 2
+        if use_goal:
             alpha = np.array(qG)
         else:
             alpha = sample(cspace)
@@ -163,12 +171,16 @@ def rrt(
         if qs is None or edge is None:
             continue
         dist = distance_computator.get_distance(qn, qs)
+        if dist <= tol:
+            print("##[ERR]## -- Did not edd edge becuase lesser than tolerance")
         if dist > tol:
             vs = G.add_vertex(qs)
             G.add_edge(vn, vs, edge)
             if use_goal and distance_computator.get_distance(qs, qG) < tol:
                 print("We Have Found the Goal")
                 return (G, root, vs)
+        else:
+            print("##[ERR]## -- Did not edd edge becuase lesser than tolerance")
 
     return (G, root, None)
 
@@ -262,8 +274,8 @@ def stopping_configuration(s1, s2, edge_creator, collision_checker, tol):
                 return (None, None)
             elif curr_ind == 1:
                 return (s1, None)
-            split_t = (curr_ind - 1) * edge.get_step_size() / edge.get_length()
-            # split_t = (curr_ind - 1) / len(edge.discretization)
+            # split_t = (curr_ind - 1) * edge.get_step_size() / edge.get_length()
+            split_t = (curr_ind - 1) / len(edge.discretization)
             (edge1, _) = edge.split(split_t)
             return (prev_state, edge1)
         curr_ind = curr_ind + 1

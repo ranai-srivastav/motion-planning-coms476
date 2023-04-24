@@ -63,15 +63,21 @@ class Graph:
         """Return the vertex in the swath of the graph that is closest to the given state"""
 
         if len(self.edges) == 0:
+            print("get_nearest says You have no edges in the graph")
             return self.get_nearest_vertex(state, distance_computator)
 
         (nearest_edge, nearest_t) = self.get_nearest_edge(state, distance_computator)
+        
+        print(f"NEAREST T {nearest_t}")
         if nearest_t <= tol:
+            print("---- You returned the FIRST point on this edge in get_nearest")
             return nearest_edge[0]
 
         if nearest_t >= 1 - tol:
+            print("---- You returned the SECOND point on this edge in get_nearest")
             return nearest_edge[1]
 
+        print("Calling split edge")
         return self.split_edge(nearest_edge, nearest_t)
 
     def get_nearest_edge(self, state, distance_computator):
@@ -87,6 +93,8 @@ class Graph:
         nearest_dist = math.inf
         nearest_edge = None
         nearest_t = None
+        
+        # print("---- called get nearest_edge")
 
         for edge_id, (cost, edge) in self.edges.items():
             (sstar, tstar) = edge.get_nearest_point(state)
@@ -96,6 +104,7 @@ class Graph:
                 nearest_edge = edge_id
                 nearest_t = tstar
 
+        print(f"nearest returned point {sstar} and the d is {tstar}")
         return (nearest_edge, nearest_t)
 
     def get_nearest_vertex(self, state, distance_computator):
@@ -132,6 +141,8 @@ class Graph:
 
         @return the id of the new vertex at the splitted point
         """
+        
+        print(f"---- ---- split edge was called")
         edge = self.edges[edge_id][1]
         (edge1, edge2) = edge.split(t)
 

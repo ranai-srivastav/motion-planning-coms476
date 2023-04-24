@@ -69,13 +69,13 @@ def draw_cspace(ax, cspace, obstacles, tick_step=[1, 1]):
     for obs in obstacles:
         ax.plot([v[0] for v in obs], [v[1] for v in obs], "r-", linewidth=3)
 
-    ax.set_xticks(
-        range(math.ceil(cspace[0][0]), math.floor(cspace[0][1]) + 1, tick_step[0])
-    )
-    ax.set_yticks(
-        range(math.ceil(cspace[1][0]), math.floor(cspace[1][1]) + 1, tick_step[1])
-    )
-    ax.set(xlim=cspace[0], ylim=cspace[1])
-    ax.set_aspect("equal", adjustable="box")
-    ax.tick_params(axis="x", labelsize=20)
-    ax.tick_params(axis="y", labelsize=20)
+    # ax.set_xticks(
+    #     range(math.ceil(cspace[0][0]), math.floor(cspace[0][1]) + 1, tick_step[0])
+    # )
+    # ax.set_yticks(
+    #     range(math.ceil(cspace[1][0]), math.floor(cspace[1][1]) + 1, tick_step[1])
+    # )
+    # ax.set(xlim=cspace[0], ylim=cspace[1])
+    # ax.set_aspect("equal", adjustable="box")
+    # ax.tick_params(axis="x", labelsize=20)
+    # ax.tick_params(axis="y", labelsize=20)

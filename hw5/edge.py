@@ -1,6 +1,7 @@
 import math
 from geometry import get_euclidean_distance, get_nearest_point_on_line
 import dubins
+import numpy
 
 
 class Edge:
@@ -131,7 +132,7 @@ class EdgeStraight(Edge):
         return self.length
     
 class DubinsEdge(Edge):
-    def __init__(self, s1, s2, length:float, discretizations, distances, rho:float = 0.5, step_size=0.1):
+    def __init__(self, s1, s2, length:float, discretizations, distances, collision_checker, rho:float = 0.5, step_size=0.1):
         self.s1 = s1
         self.s2 = s2
         self.rho = rho
@@ -140,6 +141,7 @@ class DubinsEdge(Edge):
         self.num_discretized_states = len(discretizations)
         self.distances = distances
         self.length = length
+        self.collision_checker = collision_checker
     
 
     def get_discretized_state(self, i):
@@ -159,28 +161,40 @@ class DubinsEdge(Edge):
     
 
     def get_nearest_point(self, state, ax=None):
+        """
+            returns (s, t) where is a the state that is closest on an edge from a given point
+            t where t is the propoertion along the edge
+        """
         
-        nearest_pt = self.s1
+        nearest_pt = None
         # nearest_distance = dubins.shortest_path(self.s1, state, self.rho).path_length()
         nearest_distance = float('inf')
-        
-        i = 0     
-        for states_on_line in self.discretization:
+        index = -1
+         
+        for i, states_on_line in enumerate(self.discretization):
             path = dubins.shortest_path(states_on_line, state, self.rho)
             if path is not None:
                 dist = path.path_length()
                 if dist < nearest_distance:
                     nearest_distance = dist
                     nearest_pt = states_on_line
-                if ax is not None:
-                    st, dist = path.sample_many(self.step_size)  
-                    ax.plot([s[0] for s in st], [s[1] for s in st], "g.")
+                    index = i
+                if ax is not None: 
+                    list_of_states, list_of_distances = path.sample_many(self.step_size)
+                    for s in list_of_states:
+                        ax.plot(s[0], s[1], marker=(3, 0, numpy.degrees(s[2])))
             else:
                 print("Invalid Path when calculating nearest point")
                     
         # print(f"{i}/{len(self.discretization)}")
                 
-        return nearest_pt, nearest_distance
+        # print(f"---- ---- ---- get_nearest point index = {index} for length  of d = {len(list_of_distances)} and length of s = {len(list_of_states)}")
+        print(f"---- ---- ----nearest point is {nearest_pt} and distance {get_euclidean_distance(numpy.array(nearest_pt[:3]), numpy.array(self.s1[:3]))} away")
+        
+        if nearest_pt[0] == self.s1[0] and nearest_pt[1] == self.s1[1]:
+            print("## [ERR] ##: choosing s1 as the closest point AGAIN" )
+        
+        return nearest_pt, self.distances[index]/len(self.distances)
     
     
     def split(self, t):
@@ -203,11 +217,13 @@ class DubinsEdge(Edge):
         edge1_distances = self.distances[:split_index+1]
         edge2_distances = self.distances[split_index:]
         
+        print(f"---- ---- ---- split_index = {self.discretization[split_index]}")
+        
         edge1_len = self.distances[split_index] - self.distances[0]
         edge2_len = self.distances[len(self.distances) - 1] - self.distances[split_index]
         
-        e1 = DubinsEdge(self.s1, self.discretization[split_index], edge1_len, edge1_discretization, edge1_distances, self.rho, self.step_size)
-        e2 = DubinsEdge(self.discretization[split_index], self.s2, edge2_len, edge2_discretization, edge2_distances, self.rho, self.step_size)
+        e1 = DubinsEdge(self.s1, self.discretization[split_index], edge1_len, edge1_discretization, edge1_distances, self.collision_checker, self.rho, self.step_size)
+        e2 = DubinsEdge(self.discretization[split_index], self.s2, edge2_len, edge2_discretization, edge2_distances, self.collision_checker, self.rho, self.step_size)
         
         return e1, e2
     
