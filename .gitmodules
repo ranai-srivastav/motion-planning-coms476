@@ -7,3 +7,9 @@
 [submodule "catkin_ws/src/turtlebot3_msgs"]
 	path = catkin_ws/src/turtlebot3_msgs
 	url = git@github.com:ROBOTIS-GIT/turtlebot3_msgs.git
+[submodule "catkin_ws/src/gazebo_ros_pkgs"]
+	path = catkin_ws/src/gazebo_ros_pkgs
+	url = git@github.com:ros-simulation/gazebo_ros_pkgs.git
+[submodule "catkin_ws/src/turtlebot3_simulations"]
+	path = catkin_ws/src/turtlebot3_simulations
+	url = git@github.com:ROBOTIS-GIT/turtlebot3_simulations.git

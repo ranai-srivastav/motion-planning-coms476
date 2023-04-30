@@ -48,10 +48,10 @@ RM = /usr/bin/cmake -E remove -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /root/motion-planning-coms476/catkin_ws/src
+CMAKE_SOURCE_DIR = /home/ranais/motion-planning-coms476/catkin_ws/src
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /root/motion-planning-coms476/catkin_ws/build
+CMAKE_BINARY_DIR = /home/ranais/motion-planning-coms476/catkin_ws/build
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -79,6 +79,28 @@ install/local/fast: preinstall/fast
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Installing only the local directory..."
 	/usr/bin/cmake -DCMAKE_INSTALL_LOCAL_ONLY=1 -P cmake_install.cmake
 .PHONY : install/local/fast
+
+# Special rule for the target edit_cache
+edit_cache:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
+	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
+.PHONY : edit_cache
+
+# Special rule for the target edit_cache
+edit_cache/fast: edit_cache
+
+.PHONY : edit_cache/fast
+
+# Special rule for the target test
+test:
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
+	/usr/bin/ctest --force-new-ctest-process $(ARGS)
+.PHONY : test
+
+# Special rule for the target test
+test/fast: test
+
+.PHONY : test/fast
 
 # Special rule for the target install
 install: preinstall
@@ -113,38 +135,16 @@ rebuild_cache/fast: rebuild_cache
 
 .PHONY : rebuild_cache/fast
 
-# Special rule for the target edit_cache
-edit_cache:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "No interactive CMake dialog available..."
-	/usr/bin/cmake -E echo No\ interactive\ CMake\ dialog\ available.
-.PHONY : edit_cache
-
-# Special rule for the target edit_cache
-edit_cache/fast: edit_cache
-
-.PHONY : edit_cache/fast
-
-# Special rule for the target test
-test:
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --cyan "Running tests..."
-	/usr/bin/ctest --force-new-ctest-process $(ARGS)
-.PHONY : test
-
-# Special rule for the target test
-test/fast: test
-
-.PHONY : test/fast
-
 # The main all target
 all: cmake_check_build_system
-	cd /root/motion-planning-coms476/catkin_ws/build && $(CMAKE_COMMAND) -E cmake_progress_start /root/motion-planning-coms476/catkin_ws/build/CMakeFiles /root/motion-planning-coms476/catkin_ws/build/FinalProject/CMakeFiles/progress.marks
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/all
-	$(CMAKE_COMMAND) -E cmake_progress_start /root/motion-planning-coms476/catkin_ws/build/CMakeFiles 0
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(CMAKE_COMMAND) -E cmake_progress_start /home/ranais/motion-planning-coms476/catkin_ws/build/CMakeFiles /home/ranais/motion-planning-coms476/catkin_ws/build/FinalProject/CMakeFiles/progress.marks
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/all
+	$(CMAKE_COMMAND) -E cmake_progress_start /home/ranais/motion-planning-coms476/catkin_ws/build/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
 clean:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/clean
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/clean
 .PHONY : clean
 
 # The main clean target
@@ -154,18 +154,93 @@ clean/fast: clean
 
 # Prepare targets for installation.
 preinstall: all
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/preinstall
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/preinstall
 .PHONY : preinstall
 
 # Prepare targets for installation.
 preinstall/fast:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/preinstall
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/preinstall
 .PHONY : preinstall/fast
 
 # clear depends
 depend:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 1
 .PHONY : depend
+
+# Convenience name for target.
+FinalProject/CMakeFiles/std_msgs_generate_messages_py.dir/rule:
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/CMakeFiles/std_msgs_generate_messages_py.dir/rule
+.PHONY : FinalProject/CMakeFiles/std_msgs_generate_messages_py.dir/rule
+
+# Convenience name for target.
+std_msgs_generate_messages_py: FinalProject/CMakeFiles/std_msgs_generate_messages_py.dir/rule
+
+.PHONY : std_msgs_generate_messages_py
+
+# fast build rule for target.
+std_msgs_generate_messages_py/fast:
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f FinalProject/CMakeFiles/std_msgs_generate_messages_py.dir/build.make FinalProject/CMakeFiles/std_msgs_generate_messages_py.dir/build
+.PHONY : std_msgs_generate_messages_py/fast
+
+# Convenience name for target.
+FinalProject/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule:
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
+.PHONY : FinalProject/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
+
+# Convenience name for target.
+std_msgs_generate_messages_nodejs: FinalProject/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
+
+.PHONY : std_msgs_generate_messages_nodejs
+
+# fast build rule for target.
+std_msgs_generate_messages_nodejs/fast:
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f FinalProject/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build.make FinalProject/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build
+.PHONY : std_msgs_generate_messages_nodejs/fast
+
+# Convenience name for target.
+FinalProject/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule:
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
+.PHONY : FinalProject/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+std_msgs_generate_messages_lisp: FinalProject/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
+
+.PHONY : std_msgs_generate_messages_lisp
+
+# fast build rule for target.
+std_msgs_generate_messages_lisp/fast:
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f FinalProject/CMakeFiles/std_msgs_generate_messages_lisp.dir/build.make FinalProject/CMakeFiles/std_msgs_generate_messages_lisp.dir/build
+.PHONY : std_msgs_generate_messages_lisp/fast
+
+# Convenience name for target.
+FinalProject/CMakeFiles/std_msgs_generate_messages_eus.dir/rule:
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
+.PHONY : FinalProject/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+std_msgs_generate_messages_eus: FinalProject/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
+
+.PHONY : std_msgs_generate_messages_eus
+
+# fast build rule for target.
+std_msgs_generate_messages_eus/fast:
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f FinalProject/CMakeFiles/std_msgs_generate_messages_eus.dir/build.make FinalProject/CMakeFiles/std_msgs_generate_messages_eus.dir/build
+.PHONY : std_msgs_generate_messages_eus/fast
+
+# Convenience name for target.
+FinalProject/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule:
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f CMakeFiles/Makefile2 FinalProject/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
+.PHONY : FinalProject/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+std_msgs_generate_messages_cpp: FinalProject/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
+
+.PHONY : std_msgs_generate_messages_cpp
+
+# fast build rule for target.
+std_msgs_generate_messages_cpp/fast:
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(MAKE) -f FinalProject/CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make FinalProject/CMakeFiles/std_msgs_generate_messages_cpp.dir/build
+.PHONY : std_msgs_generate_messages_cpp/fast
 
 # Help Target
 help:
@@ -175,11 +250,16 @@ help:
 	@echo "... depend"
 	@echo "... install/strip"
 	@echo "... install/local"
+	@echo "... edit_cache"
+	@echo "... test"
+	@echo "... std_msgs_generate_messages_py"
+	@echo "... std_msgs_generate_messages_nodejs"
+	@echo "... std_msgs_generate_messages_lisp"
+	@echo "... std_msgs_generate_messages_eus"
 	@echo "... install"
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
-	@echo "... edit_cache"
-	@echo "... test"
+	@echo "... std_msgs_generate_messages_cpp"
 .PHONY : help
 
 
@@ -191,6 +271,6 @@ help:
 # No rule that depends on this can have commands that come from listfiles
 # because they might be regenerated.
 cmake_check_build_system:
-	cd /root/motion-planning-coms476/catkin_ws/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
+	cd /home/ranais/motion-planning-coms476/catkin_ws/build && $(CMAKE_COMMAND) -S$(CMAKE_SOURCE_DIR) -B$(CMAKE_BINARY_DIR) --check-build-system CMakeFiles/Makefile.cmake 0
 .PHONY : cmake_check_build_system
 

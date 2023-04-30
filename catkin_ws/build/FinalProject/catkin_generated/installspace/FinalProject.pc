@@ -1,4 +1,4 @@
-prefix=/root/motion-planning-coms476/catkin_ws/install
+prefix=/home/ranais/motion-planning-coms476/catkin_ws/install
 
 Name: FinalProject
 Description: Description of FinalProject
