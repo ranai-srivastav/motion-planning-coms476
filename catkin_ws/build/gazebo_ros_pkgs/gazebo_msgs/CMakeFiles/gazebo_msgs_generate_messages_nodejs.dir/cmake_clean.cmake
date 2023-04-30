@@ -1,0 +1,42 @@
+file(REMOVE_RECURSE
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/ContactState.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/ContactsState.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/LinkState.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/LinkStates.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/ModelState.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/ModelStates.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/ODEJointProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/ODEPhysics.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/PerformanceMetrics.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/SensorPerformanceMetric.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/msg/WorldState.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/ApplyBodyWrench.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/ApplyJointEffort.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/BodyRequest.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/DeleteLight.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/DeleteModel.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/GetJointProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/GetLightProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/GetLinkProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/GetLinkState.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/GetModelProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/GetModelState.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/GetPhysicsProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/GetWorldProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/JointRequest.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/SetJointProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/SetJointTrajectory.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/SetLightProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/SetLinkProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/SetLinkState.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/SetModelConfiguration.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/SetModelState.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/SetPhysicsProperties.js"
+  "/root/motion-planning-coms476/catkin_ws/devel/share/gennodejs/ros/gazebo_msgs/srv/SpawnModel.js"
+  "CMakeFiles/gazebo_msgs_generate_messages_nodejs"
+)
+
+# Per-language clean rules from dependency scanning.
+foreach(lang )
+  include(CMakeFiles/gazebo_msgs_generate_messages_nodejs.dir/cmake_clean_${lang}.cmake OPTIONAL)
+endforeach()

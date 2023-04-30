@@ -1,0 +1,8 @@
+prefix=/root/motion-planning-coms476/catkin_ws/install
+
+Name: FinalProject
+Description: Description of FinalProject
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

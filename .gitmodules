@@ -1,0 +1,9 @@
+[submodule "turtlebot3"]
+	path = turtlebot3
+	url = git@github.com:ROBOTIS-GIT/turtlebot3.git
+[submodule "catkin_ws/src/turtlebot3"]
+	path = catkin_ws/src/turtlebot3
+	url = git@github.com:ROBOTIS-GIT/turtlebot3.git
+[submodule "catkin_ws/src/turtlebot3_msgs"]
+	path = catkin_ws/src/turtlebot3_msgs
+	url = git@github.com:ROBOTIS-GIT/turtlebot3_msgs.git
