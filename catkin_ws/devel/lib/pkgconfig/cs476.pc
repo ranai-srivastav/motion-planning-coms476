@@ -1,4 +1,4 @@
-prefix=/home/ranais/motion-planning-coms476/catkin_ws/devel
+prefix=/root/motion-planning-coms476/catkin_ws/devel
 
 Name: cs476
 Description: Description of cs476

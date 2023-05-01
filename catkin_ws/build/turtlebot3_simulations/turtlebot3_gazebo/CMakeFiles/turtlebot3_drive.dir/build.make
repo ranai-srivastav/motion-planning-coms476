@@ -135,13 +135,12 @@ turtlebot3_drive_EXTERNAL_OBJECTS =
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libprotobuf.so
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libsdformat9.so.9.10.0
+/root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libOgreMain.so
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libboost_thread.so.1.71.0
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libboost_date_time.so.1.71.0
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libOgreTerrain.so
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libOgrePaging.so
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libignition-common3-graphics.so.3.15.1
-/root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libOgreTerrain.so
-/root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libOgrePaging.so
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libSimTKsimbody.so.3.6
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libSimTKmath.so.3.6
 /root/motion-planning-coms476/catkin_ws/devel/lib/turtlebot3_gazebo/turtlebot3_drive: /usr/lib/x86_64-linux-gnu/libSimTKcommon.so.3.6
