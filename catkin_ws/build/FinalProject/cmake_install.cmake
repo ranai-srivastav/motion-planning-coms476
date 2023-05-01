@@ -1,8 +1,8 @@
-# Install script for directory: /root/motion-planning-coms476/catkin_ws/src/FinalProject
+# Install script for directory: /home/ranais/motion-planning-coms476/catkin_ws/src/FinalProject
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "/root/motion-planning-coms476/catkin_ws/install")
+  set(CMAKE_INSTALL_PREFIX "/home/ranais/motion-planning-coms476/catkin_ws/install")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -38,17 +38,17 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/root/motion-planning-coms476/catkin_ws/build/FinalProject/catkin_generated/installspace/FinalProject.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/ranais/motion-planning-coms476/catkin_ws/build/FinalProject/catkin_generated/installspace/FinalProject.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/FinalProject/cmake" TYPE FILE FILES
-    "/root/motion-planning-coms476/catkin_ws/build/FinalProject/catkin_generated/installspace/FinalProjectConfig.cmake"
-    "/root/motion-planning-coms476/catkin_ws/build/FinalProject/catkin_generated/installspace/FinalProjectConfig-version.cmake"
+    "/home/ranais/motion-planning-coms476/catkin_ws/build/FinalProject/catkin_generated/installspace/FinalProjectConfig.cmake"
+    "/home/ranais/motion-planning-coms476/catkin_ws/build/FinalProject/catkin_generated/installspace/FinalProjectConfig-version.cmake"
     )
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/FinalProject" TYPE FILE FILES "/root/motion-planning-coms476/catkin_ws/src/FinalProject/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/FinalProject" TYPE FILE FILES "/home/ranais/motion-planning-coms476/catkin_ws/src/FinalProject/package.xml")
 endif()
 

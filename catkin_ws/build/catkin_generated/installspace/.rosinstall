@@ -1,2 +1,2 @@
 - setup-file:
-    local-name: /root/motion-planning-coms476/catkin_ws/install/setup.sh
+    local-name: /home/ranais/motion-planning-coms476/catkin_ws/install/setup.sh

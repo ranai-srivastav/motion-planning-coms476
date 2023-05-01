@@ -67,14 +67,14 @@ set(cs476_CONFIG_INCLUDED TRUE)
 
 # set variables for source/devel/install prefixes
 if("FALSE" STREQUAL "TRUE")
-  set(cs476_SOURCE_PREFIX /root/motion-planning-coms476/catkin_ws/src/cs476)
-  set(cs476_DEVEL_PREFIX /root/motion-planning-coms476/catkin_ws/devel)
+  set(cs476_SOURCE_PREFIX /home/ranais/motion-planning-coms476/catkin_ws/src/cs476)
+  set(cs476_DEVEL_PREFIX /home/ranais/motion-planning-coms476/catkin_ws/devel)
   set(cs476_INSTALL_PREFIX "")
   set(cs476_PREFIX ${cs476_DEVEL_PREFIX})
 else()
   set(cs476_SOURCE_PREFIX "")
   set(cs476_DEVEL_PREFIX "")
-  set(cs476_INSTALL_PREFIX /root/motion-planning-coms476/catkin_ws/install)
+  set(cs476_INSTALL_PREFIX /home/ranais/motion-planning-coms476/catkin_ws/install)
   set(cs476_PREFIX ${cs476_INSTALL_PREFIX})
 endif()
 
@@ -154,7 +154,7 @@ foreach(library ${libraries})
     set(lib_path "")
     set(lib "${library}-NOTFOUND")
     # since the path where the library is found is returned we have to iterate over the paths manually
-    foreach(path /root/motion-planning-coms476/catkin_ws/install/lib;/root/motion-planning-coms476/catkin_ws/devel/lib;/opt/ros/noetic/lib)
+    foreach(path /home/ranais/motion-planning-coms476/catkin_ws/install/lib;/opt/ros/noetic/lib)
       find_library(lib ${library}
         PATHS ${path}
         NO_DEFAULT_PATH NO_CMAKE_FIND_ROOT_PATH)
