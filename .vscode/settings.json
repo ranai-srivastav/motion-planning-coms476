@@ -1,5 +1,5 @@
 {
     "python.analysis.extraPaths": [
-        "./catkin_ws/src/cs476/src"
+        ".root/catkin_ws/src/cs476/src"
     ]
 }

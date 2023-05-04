@@ -13,3 +13,6 @@
 [submodule "catkin_ws/src/turtlebot3_simulations"]
 	path = catkin_ws/src/turtlebot3_simulations
 	url = git@github.com:ROBOTIS-GIT/turtlebot3_simulations.git
+[submodule "catkin_ws/src/FinalProject/src/RRTandPRM"]
+	path = catkin_ws/src/FinalProject/src/RRTandPRM
+	url = git@github.com:deckard20202020/RRTandPRM.git

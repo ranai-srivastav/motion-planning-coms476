@@ -91,9 +91,9 @@ endif()
 # flag project as catkin-based to distinguish if a find_package()-ed project is a catkin project
 set(FinalProject_FOUND_CATKIN_PROJECT TRUE)
 
-if(NOT " " STREQUAL " ")
+if(NOT "/root/motion-planning-coms476/catkin_ws/devel/include " STREQUAL " ")
   set(FinalProject_INCLUDE_DIRS "")
-  set(_include_dirs "")
+  set(_include_dirs "/root/motion-planning-coms476/catkin_ws/devel/include")
   if(NOT " " STREQUAL " ")
     set(_report "Check the issue tracker '' and consider creating a ticket if the problem has not been reported yet.")
   elseif(NOT " " STREQUAL " ")
@@ -177,7 +177,7 @@ foreach(library ${libraries})
   endif()
 endforeach()
 
-set(FinalProject_EXPORTED_TARGETS "")
+set(FinalProject_EXPORTED_TARGETS "FinalProject_generate_messages_cpp;FinalProject_generate_messages_eus;FinalProject_generate_messages_lisp;FinalProject_generate_messages_nodejs;FinalProject_generate_messages_py")
 # create dummy targets for exported code generation targets to make life of users easier
 foreach(t ${FinalProject_EXPORTED_TARGETS})
   if(NOT TARGET ${t})
@@ -185,7 +185,7 @@ foreach(t ${FinalProject_EXPORTED_TARGETS})
   endif()
 endforeach()
 
-set(depends "")
+set(depends "message_runtime")
 foreach(depend ${depends})
   string(REPLACE " " ";" depend_list ${depend})
   # the package name of the dependency must be kept in a unique variable so that it is not overwritten in recursive calls
@@ -214,7 +214,7 @@ foreach(depend ${depends})
   _list_append_deduplicate(FinalProject_EXPORTED_TARGETS ${${FinalProject_dep}_EXPORTED_TARGETS})
 endforeach()
 
-set(pkg_cfg_extras "")
+set(pkg_cfg_extras "FinalProject-msg-extras.cmake")
 foreach(extra ${pkg_cfg_extras})
   if(NOT IS_ABSOLUTE ${extra})
     set(extra ${FinalProject_DIR}/${extra})
