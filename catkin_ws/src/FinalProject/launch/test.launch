@@ -1,0 +1,10 @@
+<launch>
+    <arg name="my_args"/> 
+
+    <node pkg="FinalProject" type="path_transfer_node.py" name="path_node" output="screen" args="$(arg my_args)">
+        <param name="alg" value="$(arg my_args)" /> 
+    </node>
+
+    <!-- <node pkg="FinalProject" type="can_i_ros.py" name="testing_nodes" output="screen"/> -->
+
+</launch>
