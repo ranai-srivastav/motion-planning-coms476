@@ -295,6 +295,7 @@ if __name__ == "__main__":
                 distance_computator=distance_computator,
                 collision_checker=collision_checker,
                 k=15,
+                numIt=1000
             )
             print("DONE WITH  PRM")
         else:

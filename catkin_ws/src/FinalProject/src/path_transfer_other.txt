@@ -1,8 +1,5 @@
 #! /usr/bin/python3
 
-# Original code from https://github.com/ROBOTIS-GIT/turtlebot3/blob/master/turtlebot3_example/nodes/turtlebot3_pointop_key with additions to 
-# make it compatible with Coms476/HW5 solution
-
 import rospy
 from geometry_msgs.msg import Twist, Point, Quaternion
 import tf
