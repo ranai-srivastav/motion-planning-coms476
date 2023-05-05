@@ -225,7 +225,6 @@ def arg_parse(argv):
 if __name__ == "__main__":
     
     rospy.init_node("path_node", log_level=rospy.DEBUG)
-    rospy.spin()
     
     # TODO: Change min turning radius
     # rho_min = 0.5
@@ -256,15 +255,14 @@ if __name__ == "__main__":
         path_is_gen = Bool()
         path_is_gen.data = False
         
-        validity_publisher = rospy.Publisher("is_published", Bool, queue_size=1)
-        path_publisher = rospy.Publisher("path", Path, queue_size=1)
+        # validity_publisher = rospy.Publisher("is_published", Bool, queue_size=1)
+        path_publisher = rospy.Publisher("coms476_finalproject_path", Path, queue_size=1)
         
-        validity_publisher.publish(path_is_gen)
+        # validity_publisher.publish(path_is_gen)
         
         rate = rospy.Rate(10)
-        rospy.spin()
         
-        args = rospy.get_param("path_node/alg")
+        args = rospy.get_param("CS476_finalproject_pathnode/alg")
         if args.lower() == "rrt":
             alg = ALG_RRT
         elif args.lower() == "prm":
@@ -306,11 +304,11 @@ if __name__ == "__main__":
         print("BUILDING PATH")
         if root is not None and goal is not None:
             
-            validity_publisher.publish(path_is_gen)
+            # validity_publisher.publish(path_is_gen)
             path = G.getVertexIdsAlongPath(root, goal)
             pathLength = findPathLength(G, path)
             
-            validity_publisher.publish(path_is_gen)
+            # validity_publisher.publish(path_is_gen)
             path_to_publish = []
             
             for pid in path:
@@ -322,35 +320,36 @@ if __name__ == "__main__":
                 point.theta = theta
                 
                 path_to_publish.append(point)
-                print("Added a point")
+                print("[PATH]: ---- Added a point")
             
             print(path_to_publish)
                 
             
-            print("We are drawing the graph")
+            # print("[PATH]: ---- We are drawing the graph")
             # fig, ax = plt.subplots(1, 1)
             # draw(ax, cspace, obs_boundaries, qI, qG, G, path, title)
             # plt.show()
-            validity_publisher.publish(path_is_gen)
+            # validity_publisher.publish(path_is_gen)
             pub_this = Path()
             pub_this.path = path_to_publish
             
-            print("About to publish")
-            print(f"Is rospy shutdown?: {rospy.is_shutdown()}")
+            print("[PATH]: ---- About to publish")
+            # print(f"Is rospy shutdown?: {rospy.is_shutdown()}")
             while not rospy.is_shutdown():
                 path_publisher.publish(pub_this)
-                path_is_gen.data = True
-                validity_publisher.publish(path_is_gen)
-                print("In the loop")
-                rospy.loginfo("sent path value")
-                rate.sleep()
                 rospy.spin()
+                rate.sleep()
+                # path_is_gen.data = True
+                # validity_publisher.publish(path_is_gen)
+                # print("In the loop")
+                # rospy.loginfo("sent path value")
             
             # This gets a very discretized path
             # This is what I want to send to ROS
             # path = G.get_path(root, goal)
         else:
             rospy.logerr("Could not Find a path")
+            raise rospy.ROSException("Could not Find a path")
                 
     except Exception as e:
         rospy.logerr('ERROR IN PATH TRANSFER NODE: ')

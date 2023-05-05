@@ -6,6 +6,8 @@ import tf
 from math import radians, copysign, sqrt, pow, pi, atan2, degrees
 from tf.transformations import euler_from_quaternion
 import numpy as np
+from FinalProject.msg import Path, Point
+import time
 
 msg = """
 control your Turtlebot3!
@@ -21,7 +23,7 @@ If you want to close, insert 's'
 
 class GotoPoint():
     def __init__(self, point):
-        rospy.init_node('turtlebot3_pointop_key', anonymous=False)
+        # rospy.init_node('turtlebot3_pointop_key', anonymous=False)
         rospy.on_shutdown(self.shutdown)
         self.cmd_vel = rospy.Publisher('cmd_vel', Twist, queue_size=5)
         position = Point()
@@ -47,22 +49,16 @@ class GotoPoint():
         linear_speed = 1
         angular_speed = 1
         
-        print(f"----------------  In code  --------------------")
-        print(f"----------------  {self.getkey()}  --------------------")
         (goal_x, goal_y, goal_z) = self.getkey()
-        print(f"----------------  self.getkey() successful  --------------------")
         if goal_z > 180 or goal_z < -180:
-            print("you input wrong z range.")
-            print("------------------------------ -180 < z < 180 -------------------------------")
             self.shutdown()
         goal_z = np.deg2rad(goal_z)
         goal_distance = sqrt(pow(goal_x - position.x, 2) + pow(goal_y - position.y, 2))
         distance = goal_distance
         
-        print(f"----------------  Caculated Goal sitance as {goal_distance}  --------------------")
-
-        while distance > 0.2:
-            print(f"----------------  Distance > 0.5  --------------------")
+        # print(f"[GZBO] ---- ---- ---- Caculated Goal distance is {goal_distance}")
+        while distance > 0.1:
+            print(f"[GZBO] ---- ---- ---- Distance: {distance} > 0.05")
             (position, rotation) = self.get_odom()
             x_start = position.x
             y_start = position.y
@@ -92,37 +88,37 @@ class GotoPoint():
             r.sleep()
         (position, rotation) = self.get_odom()
 
-        print(f"----------------  Rotation {rotation}  --------------------")
         while abs(rotation - goal_z) > 0.05:
-            print(f"----------------  Rotation > 0.05 rads  --------------------")
+            print(f"[GZBO] ---- ---- ---- Rotation: {rotation} > 0.05")
+            # print(f"----------------  Rotation > 0.05 rads  --------------------")
             (position, rotation) = self.get_odom()
             if goal_z >= 0:
                 if rotation <= goal_z and rotation >= goal_z - pi:
                     move_cmd.linear.x = 0.00
-                    move_cmd.angular.z = 0.5
+                    move_cmd.angular.z = 0.2
                 else:
                     move_cmd.linear.x = 0.00
-                    move_cmd.angular.z = -0.5
+                    move_cmd.angular.z = -0.2
             else:
                 if rotation <= goal_z + pi and rotation > goal_z:
                     move_cmd.linear.x = 0.00
-                    move_cmd.angular.z = -0.5
+                    move_cmd.angular.z = -0.2
                 else:
                     move_cmd.linear.x = 0.00
-                    move_cmd.angular.z = 0.5
+                    move_cmd.angular.z = 0.2
             self.cmd_vel.publish(move_cmd)
             r.sleep()
 
-        print(f"----------------  Publishing move_cmd x = {move_cmd.linear.x}  --------------------")
+        # print(f"----------------  Publishing move_cmd x = {move_cmd.linear.x}  --------------------")
 
-        rospy.loginfo("Stopping the robot...")
+        rospy.loginfo(" ***** ***** **** Stopping the robot...")
         self.cmd_vel.publish(Twist())
         
     def getkey(self):
         print(f"{self.goal_point}")
-        x = self.goal_point[0]
-        y = self.goal_point[1]
-        z = self.goal_point[2]
+        x = self.goal_point.x
+        y = self.goal_point.y
+        z = self.goal_point.theta
         
         x, y, z = [float(x), float(y), float(z)]
         
@@ -150,19 +146,29 @@ class GotoPoint():
         self.cmd_vel.publish(Twist())
         rospy.sleep(1)
 
+    
+
 
 if __name__ == '__main__':
-    print("\n\n********************* In main ***************************")
+    print("[GZBO] ---- ---- Entering Gazebo Node")
     try:
-            
+        rospy.init_node('turtlebot3_pointop_key', anonymous=False)
+        msg = rospy.wait_for_message("coms476_finalproject_path", Path)
+        time.sleep(3)
+        
+        print("[GZBO] ---- ---- Received path")
+        path_to_follow = msg.path
+    
         i = 0
         while not rospy.is_shutdown() and i < len(path_to_follow):
-            print(f"MOVING TO POINT NUM {i} = {path_to_follow[i]}")
+            print(f"[GZBO] ---- ---- MOVING TO POINT NUM {i} = {path_to_follow[i].x} {path_to_follow[i].y} {path_to_follow[i].theta}")
             GotoPoint(path_to_follow[i])
             i += 1
-        print("\n\n********************* Program ****** Over ***************************")
-        print(f"is_shutdown() == {rospy.is_shutdown}")
+            
         print(f"i = {i}")
+        rospy.signal_shutdown("Goal Reached")
+    
+        # path_sub = rospy.Subscriber("coms476_finalproject_path", Path, queue_size=1, callback=path_recieved)
 
     except Exception as e:
         rospy.loginfo("shutdown program.")

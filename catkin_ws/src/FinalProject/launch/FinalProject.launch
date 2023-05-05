@@ -4,6 +4,11 @@
   <arg name="x_pos" default="-0.5"/>
   <arg name="y_pos" default="0.0"/>
   <arg name="z_pos" default="0.0"/>
+  <arg name="my_args"/> 
+
+  <node pkg="FinalProject" type="path_transfer_node.py" name="CS476_finalproject_pathnode" output="screen" args="$(arg my_args)">
+      <param name="alg" value="$(arg my_args)" /> 
+  </node>
 
   <include file="$(find gazebo_ros)/launch/empty_world.launch">
     <arg name="world_name" value="$(find FinalProject)/worlds/CS476_finalProject_world.world"/>
