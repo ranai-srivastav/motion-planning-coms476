@@ -1,5 +1,5 @@
 
-To run this code, clone this repository [ssh link](git@github.com:ranai-srivastav/motion-planning-coms476.git)  with `--recurse-submodules` or open the zip file
+To run this code, clone this repository  with `--recurse-submodules` or open the zip file
 
 The zip file consists of folder/repo motion-planning-coms476. 
 
